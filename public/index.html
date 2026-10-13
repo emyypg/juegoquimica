@@ -1,0 +1,379 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#140e1e">
+<title>Vaso Caliente</title>
+<link rel="stylesheet" href="style.css">
+<style>
+html,body{height:100%;overscroll-behavior:none}
+body{background:radial-gradient(600px 500px at 20% -10%,rgba(154,99,224,.28),transparent 60%),radial-gradient(600px 500px at 110% 110%,rgba(255,59,92,.2),transparent 60%),var(--night);user-select:none;-webkit-user-select:none;-webkit-tap-highlight-color:transparent;touch-action:manipulation}
+.view{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:20px;padding:calc(44px + env(safe-area-inset-top,0px)) 18px calc(24px + env(safe-area-inset-bottom,0px));transition:background .25s}
+.who{position:fixed;top:calc(10px + env(safe-area-inset-top,0px));left:12px;right:12px;padding:6px 12px 6px 8px;border-radius:999px;background:rgba(0,0,0,.22);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);display:flex;justify-content:space-between;align-items:center;gap:10px;font-family:var(--f-data);font-size:.9rem;z-index:5;pointer-events:none;color:rgba(255,255,255,.85)}
+.who .me{display:flex;align-items:center;gap:8px;min-width:0}
+.who .me i{width:22px;height:22px;flex:0 0 22px}
+.who .me span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+form{display:flex;flex-direction:column;gap:12px;width:min(380px,100%);background:rgba(42,31,64,.72);border:1px solid rgba(154,99,224,.28);border-radius:24px;padding:22px;box-shadow:0 18px 40px rgba(0,0,0,.35)}
+.btn.hot{box-shadow:0 6px 0 #a11431}
+.btn.hot:active{box-shadow:0 2px 0 #a11431;transform:translateY(4px)}
+label{font-family:var(--f-data);font-size:.8rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);text-align:left}
+input{font:inherit;font-size:1.4rem;padding:14px 16px;border-radius:14px;border:2px solid var(--line);background:#120d1b;color:var(--ink);width:100%}
+input:focus{border-color:var(--violet);outline:none;box-shadow:0 0 0 4px rgba(154,99,224,.25)}
+#f-pin{font-family:var(--f-data);letter-spacing:.3em;text-align:center;font-size:2rem}
+.err{color:var(--acid);min-height:1.4em}
+.logo{font-size:2.8rem;font-weight:800;text-shadow:0 5px 0 rgba(0,0,0,.35)}
+.join-beaker{width:84px;animation:bob 2.4s ease-in-out infinite;filter:drop-shadow(0 0 20px rgba(255,59,92,.45))}
+@keyframes bob{50%{transform:translateY(-8px) rotate(-3deg)}}
+.logo span{color:var(--acid);text-shadow:0 0 26px rgba(255,59,92,.5),0 5px 0 rgba(0,0,0,.35)}
+
+/* Elegir personaje */
+#v-pick{justify-content:flex-start;overflow-y:auto;gap:14px;padding-top:calc(22px + env(safe-area-inset-top,0px))}
+.preview{display:flex;align-items:center;gap:14px;width:min(380px,100%);text-align:left}
+.pv{width:86px;height:86px;flex:0 0 86px;border-radius:30%;padding:7px;background-image:radial-gradient(circle at 30% 20%,rgba(255,255,255,.35),transparent 55%);box-shadow:0 6px 0 rgba(0,0,0,.25);transition:background-color .2s}
+.pv-txt{display:flex;flex-direction:column;min-width:0}
+.pv-txt small{font-family:var(--f-data);letter-spacing:.12em;text-transform:uppercase;color:var(--muted);font-size:.75rem}
+.pv-txt b{font-family:var(--f-display);font-size:1.8rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.avatars{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:8px}
+.avatars button{aspect-ratio:1;border:0;border-radius:28%;padding:5px;background-image:radial-gradient(circle at 30% 20%,rgba(255,255,255,.3),transparent 55%);box-shadow:0 4px 0 rgba(0,0,0,.28);transition:transform .12s}
+.avatars button:active{transform:translateY(3px)}
+.avatars button.sel{outline:4px solid #fff;outline-offset:2px;transform:scale(1.08);z-index:1}
+.avatars button:disabled{opacity:.16;filter:grayscale(1);box-shadow:none}
+
+/* Mi figura (espera, calma, fin) */
+#v-me{background-image:radial-gradient(circle at 50% 38%,rgba(255,255,255,.28),transparent 58%),linear-gradient(180deg,transparent 60%,rgba(0,0,0,.22))}
+.mark{width:min(58vw,260px);aspect-ratio:1;filter:drop-shadow(0 12px 0 rgba(0,0,0,.2));animation:breathe 2.6s ease-in-out infinite}
+@keyframes breathe{50%{transform:scale(1.05)}}
+.bignum{text-shadow:0 8px 0 rgba(0,0,0,.2);font-family:var(--f-display);font-weight:800;font-size:clamp(4.5rem,26vw,9rem);line-height:1;color:#fff}
+.hint{font-size:1.1rem;font-weight:700;opacity:.9;max-width:28ch}
+
+/* Tengo el vaso */
+#v-hold{background-color:var(--acid);background-image:radial-gradient(circle at 50% 45%,rgba(255,255,255,.22),transparent 60%)}
+#v-hold.pulse{animation:alarm .45s ease-in-out infinite alternate}
+@keyframes alarm{from{background-color:#d8243f}to{background-color:#ff5470}}
+#v-hold.anti{background-color:var(--calm);animation:none}
+#v-hold.double{background-color:var(--hot);animation:none}
+.tapbtn{position:relative;width:min(78vw,330px);aspect-ratio:1;border-radius:50%;border:0;background:#fff;box-shadow:0 12px 0 rgba(0,0,0,.25);transition:transform .06s;display:grid;place-items:center;padding:0}
+.tapbtn:active{transform:translateY(8px) scale(.97);box-shadow:0 4px 0 rgba(0,0,0,.25)}
+.tapbtn svg.beaker{width:46%;height:auto}
+.tapbtn .ring{position:absolute;inset:-14px;width:calc(100% + 28px);height:calc(100% + 28px);transform:rotate(-90deg);pointer-events:none}
+.tdots{display:flex;gap:12px}
+.tdots i{width:20px;height:20px;border-radius:50%;background:rgba(255,255,255,.35)}
+.tdots i.on{background:#fff}
+.pick{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;width:min(440px,100%);flex:1;max-height:72vh}
+.pick button .av{width:72%;max-width:150px;aspect-ratio:1;display:block}
+.pick button .nm{font-family:var(--f-display);font-weight:800;font-size:clamp(1.05rem,5vw,1.4rem);max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;text-shadow:0 2px 0 rgba(0,0,0,.18)}
+.pick button{display:flex !important;flex-direction:column;align-items:center;justify-content:center;gap:6px;padding:10px !important;border:0;border-radius:22px;background-image:linear-gradient(180deg,rgba(255,255,255,.18),transparent 55%) !important;display:grid;place-items:center;padding:16%;box-shadow:0 8px 0 rgba(0,0,0,.25);min-height:120px}
+.pick button:active{transform:translateY(5px);box-shadow:0 3px 0 rgba(0,0,0,.25)}
+.pick.one{grid-template-columns:minmax(0,1fr)}
+.shake{animation:wob .4s ease}
+@keyframes wob{25%{transform:translateX(-10px) rotate(-2deg)}50%{transform:translateX(10px) rotate(2deg)}75%{transform:translateX(-6px)}}
+
+.clock{font-family:var(--f-data);font-weight:600;font-size:clamp(2.4rem,12vw,3.4rem);font-variant-numeric:tabular-nums;color:#fff;line-height:1;display:flex;align-items:baseline;gap:6px}
+.clock small{font-size:.4em;letter-spacing:.12em;text-transform:uppercase;opacity:.8}
+.clock.danger{animation:blink .5s steps(2) infinite}
+@keyframes blink{50%{opacity:.3}}
+.mini-clock{font-family:var(--f-data);font-size:1.3rem;font-variant-numeric:tabular-nums;opacity:.9}
+
+#bonus{position:fixed;left:50%;top:22%;transform:translateX(-50%);z-index:30;font-family:var(--f-display);font-weight:800;font-size:2.4rem;color:var(--gold);text-shadow:0 4px 0 rgba(0,0,0,.4),0 0 20px rgba(255,210,63,.6);pointer-events:none;animation:floatup 1.3s ease-out forwards;white-space:nowrap}
+@keyframes floatup{0%{opacity:0;transform:translate(-50%,20px) scale(.6)}20%{opacity:1;transform:translate(-50%,0) scale(1.15)}100%{opacity:0;transform:translate(-50%,-60px) scale(1)}}
+
+/* Fantasma */
+#v-ghost{background:radial-gradient(circle at 50% 40%,#3d2c63,#1d1430 70%)}
+.ghostbtn{width:min(70vw,300px);aspect-ratio:1;border-radius:50% 50% 44% 44%;border:0;background:#d9cff5;color:#2b1f45;font-family:var(--f-display);font-size:2.4rem;font-weight:800;box-shadow:0 12px 0 rgba(0,0,0,.3);display:grid;place-items:center}
+.ghostbtn:active{transform:translateY(8px);box-shadow:0 4px 0 rgba(0,0,0,.3)}
+.ghostbtn .eyes{display:flex;gap:22%;width:100%;justify-content:center}
+.ghostbtn .eyes i{width:14%;aspect-ratio:1;border-radius:50%;background:#2b1f45}
+
+#v-boom{background:radial-gradient(circle,#5a0d1c,#000 70%)}
+#v-boom h1{animation:slam .45s cubic-bezier(.2,1.6,.4,1)}
+@keyframes slam{from{transform:scale(.3) rotate(-8deg);opacity:0}to{transform:scale(1) rotate(-2deg);opacity:1}}
+#v-boom h1{font-size:clamp(3.6rem,20vw,6.5rem);color:var(--gold)}
+#offline{position:fixed;left:0;right:0;bottom:0;background:var(--hot);color:#2a0d00;text-align:center;padding:10px calc(10px + env(safe-area-inset-bottom,0px));font-weight:700;z-index:20}
+</style>
+</head>
+<body>
+<div class="who" id="who" hidden><span class="me"><i id="who-ico"></i><span id="who-name"></span></span><span id="who-score"></span></div>
+
+<section class="view" id="v-join">
+  <svg class="join-beaker" viewBox="0 0 120 140" aria-hidden="true"><path d="M28 10h64M36 10v40L12 118a10 10 0 0 0 9 14h78a10 10 0 0 0 9-14L84 50V10" fill="none" stroke="#b7aacb" stroke-width="6" stroke-linejoin="round"/><path d="M24 92h72l12 26a10 10 0 0 1-9 14H21a10 10 0 0 1-9-14z" fill="#ff3b5c"/></svg>
+  <h1 class="logo">Vaso <span>Caliente</span></h1>
+  <form id="f-pin-form" autocomplete="off">
+    <label for="f-pin">PIN de la partida</label>
+    <input id="f-pin" inputmode="numeric" pattern="[0-9]*" maxlength="4" placeholder="0000">
+    <button class="btn hot" type="submit" style="font-size:1.25rem;padding:16px">Siguiente</button>
+    <p class="err" id="f-err" aria-live="polite"></p>
+  </form>
+</section>
+
+<section class="view" id="v-pick" hidden>
+  <div class="preview">
+    <span class="pv" id="pv-av"></span>
+    <span class="pv-txt"><small>Así te van a ver</small><b id="pv-name">Tu nombre</b></span>
+  </div>
+  <form id="f-who" autocomplete="off">
+    <label for="f-name">Tu nombre</label>
+    <input id="f-name" maxlength="14" placeholder="Escribí tu nombre">
+    <label>Elegí tu personaje</label>
+    <div class="avatars" id="avatars" role="radiogroup" aria-label="Personajes"></div>
+    <button class="btn hot" type="submit" id="b-enter" style="font-size:1.25rem;padding:16px">¡Entrar!</button>
+    <p class="err" id="w-err" aria-live="polite"></p>
+  </form>
+</section>
+
+<!-- Espera / calma / cuenta / resultados: pantalla de tu color con tu figura -->
+<section class="view" id="v-me" hidden>
+  <div class="mark" id="me-mark"></div>
+  <div class="bignum" id="me-num" hidden></div>
+  <p class="hint" id="me-hint">Esta es tu figura. Buscala en la tele.</p>
+  <p class="mini-clock" id="me-clock" hidden></p>
+</section>
+
+<section class="view" id="v-hold" hidden>
+  <div class="clock" id="h-clock"><span id="h-sec">0.0</span><small>seg</small></div>
+  <div id="h-tap" style="display:flex;flex-direction:column;align-items:center;gap:26px">
+    <button class="tapbtn" id="b-tap" aria-label="Tocar para sacarte el vaso">
+      <svg class="ring" viewBox="0 0 120 120" aria-hidden="true"><circle cx="60" cy="60" r="56" fill="none" stroke="rgba(255,255,255,.3)" stroke-width="6"/><circle id="ring" cx="60" cy="60" r="56" fill="none" stroke="#fff" stroke-width="6" stroke-linecap="round" stroke-dasharray="351.9" stroke-dashoffset="351.9"/></svg>
+      <svg class="beaker" viewBox="0 0 120 140" aria-hidden="true"><path d="M28 10h64M36 10v40L12 118a10 10 0 0 0 9 14h78a10 10 0 0 0 9-14L84 50V10" fill="none" stroke="#2a0b14" stroke-width="7" stroke-linejoin="round"/><path d="M24 92h72l12 26a10 10 0 0 1-9 14H21a10 10 0 0 1-9-14z" fill="#ff3b5c"/></svg>
+    </button>
+    <div class="tdots" id="h-dots"></div>
+  </div>
+  <div class="pick" id="h-pick" hidden></div>
+</section>
+
+<section class="view" id="v-ghost" hidden>
+  <button class="ghostbtn" id="b-ghost" aria-label="Asustar"><span class="eyes"><i></i><i></i></span></button>
+  <p class="hint">¡Tocá para molestar al que tiene el vaso!</p>
+  <p class="mini-clock" id="g-clock"></p>
+</section>
+
+<section class="view" id="v-boom" hidden><h1>¡BOOM!</h1></section>
+
+<section class="view" id="v-kicked" hidden>
+  <p class="logo" style="font-size:2rem" id="k-title">Te sacaron de la partida</p>
+  <p class="hint" id="k-sub"></p>
+  <button class="btn" id="b-rejoin">Volver a entrar</button>
+</section>
+
+<div id="bonus" hidden></div>
+<div id="offline" hidden>Sin conexión. Reconectando…</div>
+
+<script src="/socket.io/socket.io.js"></script>
+<script src="ident.js"></script>
+<script>
+(function(){
+  "use strict";
+  var $ = function(id){ return document.getElementById(id); };
+  var socket = io();
+  var V = null, me = null, boomUntil = 0, KEY = "vaso-caliente-jugador";
+  var VIEWS = ["v-join","v-pick","v-me","v-hold","v-ghost","v-boom","v-kicked"];
+  function show(id){ VIEWS.forEach(function(v){ $(v).hidden = v !== id; }); $("who").hidden = !me || id === "v-join" || id === "v-pick" || id === "v-kicked"; }
+  function buzz(p){ try { if (navigator.vibrate) navigator.vibrate(p); } catch(e){} }
+  function load(){ try { return JSON.parse(localStorage.getItem(KEY) || "null"); } catch(e){ return null; } }
+  function store(o){ try { localStorage.setItem(KEY, JSON.stringify(o)); } catch(e){} }
+
+  var DEVKEY = "vaso-caliente-dispositivo", device = null;
+  try { device = localStorage.getItem(DEVKEY); if (!device){ device = Math.random().toString(36).slice(2) + Date.now().toString(36); localStorage.setItem(DEVKEY, device); } } catch(e){ device = Math.random().toString(36).slice(2); }
+
+  var qp = (new URLSearchParams(location.search).get("pin") || "").replace(/\D/g,"").slice(0,4);
+  var sv = load();
+  if (qp) $("f-pin").value = qp;
+  else if (sv && sv.pin) $("f-pin").value = sv.pin;
+  if (sv && sv.name) $("f-name").value = sv.name;
+
+  function setMe(color, shape){
+    var c = IDENT.color(color);
+    $("me-mark").innerHTML = IDENT.svg(shape, c.fg, IDENT.faceColor(color));
+    $("who-ico").innerHTML = IDENT.svg(shape, "#ffffff");
+    $("v-me").style.backgroundColor = c.bg;
+    $("v-me").style.color = c.fg;
+  }
+
+  // ---------- Entrar: PIN, después nombre y personaje ----------
+  var pinOk = null, idents = [], taken = {}, chosen = null, ORDER = ["rojo","azul","amarillo","verde","violeta","naranja"], SH = ["triangulo","circulo","cuadrado","rombo","estrella"];
+  function freeChoice(){
+    var free = []; for (var i=0;i<idents.length;i++) if (!taken[i]) free.push(i);
+    return free.length ? free[Math.floor(Math.random()*free.length)] : null;
+  }
+  function renderAvatars(){
+    var box = $("avatars"); box.innerHTML = "";
+    var idx = idents.map(function(_, i){ return i; }).sort(function(a, b){
+      return ORDER.indexOf(idents[a].color) - ORDER.indexOf(idents[b].color) || SH.indexOf(idents[a].shape) - SH.indexOf(idents[b].shape);
+    });
+    idx.forEach(function(i){
+      var id = idents[i], c = IDENT.color(id.color), b = document.createElement("button");
+      b.type = "button"; b.style.backgroundColor = c.bg; b.innerHTML = IDENT.svg(id.shape, c.fg, IDENT.faceColor(id.color));
+      b.setAttribute("role", "radio"); b.setAttribute("aria-label", id.shape + " " + id.color);
+      b.setAttribute("aria-checked", i === chosen ? "true" : "false");
+      if (taken[i]) b.disabled = true;
+      if (i === chosen) b.className = "sel";
+      b.addEventListener("click", function(){ chosen = i; renderAvatars(); buzz(15); });
+      box.appendChild(b);
+    });
+    renderPreview();
+  }
+  function renderPreview(){
+    if (chosen === null || !idents[chosen]){ $("pv-av").innerHTML = ""; return; }
+    var id = idents[chosen], c = IDENT.color(id.color);
+    $("pv-av").style.backgroundColor = c.bg; $("pv-av").innerHTML = IDENT.svg(id.shape, c.fg, IDENT.faceColor(id.color));
+    $("pv-name").textContent = $("f-name").value.trim() || "Tu nombre";
+  }
+  $("f-name").addEventListener("input", function(){ $("w-err").textContent = ""; renderPreview(); });
+  function setTaken(list){ taken = {}; (list || []).forEach(function(i){ taken[i] = true; }); if (chosen !== null && taken[chosen]) chosen = freeChoice(); }
+  function peek(pin, silent){
+    socket.emit("room:peek", {pin:pin, device:device}, function(res){
+      if (!res || !res.ok){
+        if (res && res.banned) return showOut(true);
+        if (!silent) $("f-err").textContent = (res && res.error) || "No se pudo entrar.";
+        return show("v-join");
+      }
+      pinOk = res.pin; idents = res.idents || []; setTaken(res.taken);
+      if (chosen === null) chosen = freeChoice();
+      renderAvatars(); show("v-pick");
+      if (res.full) $("w-err").textContent = "La partida está llena.";
+    });
+  }
+  socket.on("taken", function(d){ if (me || !pinOk) return; setTaken(d.taken); renderAvatars(); });
+
+  function join(pin, name, pid, silent, ident, resume){
+    socket.emit("player:join", {pin:pin, name:name, pid:pid, ident:ident, device:device, resume:!!resume}, function(res){
+      if (!res || !res.ok){
+        if (res && res.banned) return showOut(true);
+        if (res && res.gone){ me = null; return peek(pin, true); }
+        if (res && res.taken){ setTaken(res.taken); chosen = freeChoice(); renderAvatars(); }
+        if (res && (res.field === "name" || res.field === "ident")){ $("w-err").textContent = res.error; return show("v-pick"); }
+        if (!silent) $("f-err").textContent = (res && res.error) || "No se pudo entrar.";
+        me = null; return show("v-join");
+      }
+      me = {pin:res.pin, pid:res.pid, name:res.name};
+      store({pin:res.pin, pid:res.pid, name:res.name});
+      $("who-name").textContent = res.name;
+      setMe(res.color, res.shape);
+      if (!V || V.pin !== res.pin) show("v-me");
+    });
+  }
+  $("f-pin-form").addEventListener("submit", function(e){
+    e.preventDefault();
+    var pin = $("f-pin").value.trim();
+    if (!/^\d{4}$/.test(pin)){ $("f-err").textContent = "El PIN tiene 4 números."; return; }
+    $("f-err").textContent = ""; peek(pin, false);
+  });
+  $("f-who").addEventListener("submit", function(e){
+    e.preventDefault();
+    var name = $("f-name").value.trim();
+    if (!name){ $("w-err").textContent = "Escribí tu nombre."; return; }
+    if (chosen === null){ $("w-err").textContent = "Elegí un personaje."; return; }
+    $("w-err").textContent = "";
+    join(pinOk, name, null, false, chosen, false);
+  });
+
+  socket.on("connect", function(){
+    $("offline").hidden = true;
+    var s = load();
+    if (me) join(me.pin, me.name, me.pid, true, null, true);
+    else if (s && s.pid && (!qp || qp === s.pin)) join(s.pin, s.name, s.pid, true, null, true);
+    else if (qp) peek(qp, false);
+  });
+  socket.on("disconnect", function(){ if (me) $("offline").hidden = false; });
+  function showOut(banned){
+    me = null; try { localStorage.removeItem(KEY); } catch(e){}
+    $("k-title").textContent = banned ? "Te bannearon de esta partida" : "Te sacaron de la partida";
+    $("k-sub").textContent = banned ? "La admin no te deja volver a entrar." : "Podés volver a entrar con otro nombre.";
+    $("b-rejoin").hidden = !!banned;
+    show("v-kicked");
+  }
+  socket.on("kicked", function(){ showOut(false); });
+  socket.on("banned", function(){ showOut(true); });
+  $("b-rejoin").addEventListener("click", function(){ chosen = null; peek(pinOk || $("f-pin").value.trim(), false); });
+
+  socket.on("countdown", function(n){
+    if (!me) return;
+    $("me-num").textContent = n; $("me-num").hidden = false; $("me-mark").hidden = true; $("me-hint").textContent = "¡Prepará el dedo!";
+    show("v-me"); buzz(40);
+  });
+
+  socket.on("fx", function(kind){
+    if (kind === "got") buzz([150,60,150]);
+    else if (kind === "anti") buzz([60]);
+    else if (kind === "double") buzz([300,80,300,80,300]);
+    else if (kind === "boom"){ buzz([900]); boomUntil = Date.now() + 2600; }
+    else if (kind === "boomOther") buzz([60]);
+    else if (kind === "drop") buzz([40]);
+    else if (kind === "fast"){ var bn = $("bonus"); bn.textContent = "¡Rápido! +50"; bn.hidden = false; bn.style.animation = "none"; void bn.offsetWidth; bn.style.animation = ""; buzz([20,40,20]); clearTimeout(bn._h); bn._h = setTimeout(function(){ bn.hidden = true; }, 1300); }
+    else if (kind === "haunt"){ var h = $("v-hold"); h.classList.remove("shake"); void h.offsetWidth; h.classList.add("shake"); buzz(30); }
+  });
+
+  var fuse = null;
+  socket.on("fuse", function(f){ fuse = {deadline: performance.now() + f.remaining, paused: !!f.paused, left: f.remaining}; });
+  function tickClock(){
+    var playing = V && V.state === "playing" && fuse;
+    var left = playing ? (fuse.paused ? fuse.left : Math.max(0, fuse.deadline - performance.now())) / 1000 : 0;
+    var txt = left.toFixed(1);
+    $("h-sec").textContent = txt;
+    $("h-clock").classList.toggle("danger", playing && left < 3);
+    $("me-clock").hidden = !playing; $("me-clock").textContent = "Explota en " + txt + " s";
+    $("g-clock").textContent = playing ? "Explota en " + txt + " s" : "";
+    requestAnimationFrame(tickClock);
+  }
+  requestAnimationFrame(tickClock);
+  socket.on("view", function(v){ V = v; if (v.me) setMe(v.me.color, v.me.shape); render(); });
+
+  function meScreen(hint, num){
+    $("me-mark").hidden = !!num; $("me-num").hidden = !num; $("me-num").textContent = num || "";
+    $("me-hint").textContent = hint; show("v-me");
+  }
+  function render(){
+    if (!V || !me) return;
+    var m = V.me;
+    $("who-score").textContent = m.score + " pts";
+    if (V.state === "lobby") return meScreen("Esta es tu figura. Buscala en la tele.");
+    if (V.state === "countdown") return;
+    if (V.state === "boom"){
+      if (V.lastVictim === m.name && !m.alive) return show("v-boom");
+      return meScreen(m.alive ? "¡Sobreviviste! Mirá la tele." : "Mirá la tele.");
+    }
+    if (V.state === "playing" && V.paused) return meScreen("Pausa · mirá la tele", "II");
+    if (V.state === "playing"){
+      if (Date.now() < boomUntil) return;
+      if (!m.alive) return show("v-ghost");
+      if (V.holder){ renderHold(); return show("v-hold"); }
+      return meScreen("Atento: te lo pueden tirar.");
+    }
+    if (V.state === "roundEnd") return meScreen(m.score + " puntos · mirá la tele", m.rank + "°");
+    if (V.state === "final") return meScreen("Puesto final · " + m.score + " puntos", m.rank + "°");
+  }
+  var lastKey = "";
+  function renderHold(){
+    var h = $("v-hold");
+    h.classList.toggle("anti", V.need === 1);
+    h.classList.toggle("double", V.need >= 6);
+    h.classList.toggle("pulse", V.need === 3);
+    var d = ""; for (var i=0;i<V.need;i++) d += '<i class="'+(i<V.taps?"on":"")+'"></i>';
+    $("h-dots").innerHTML = d;
+    $("ring").setAttribute("stroke-dashoffset", (351.9 * (1 - Math.min(1, V.taps / V.need))).toFixed(1));
+    var picking = !!(V.targets && V.targets.length);
+    $("h-tap").hidden = picking; $("h-pick").hidden = !picking;
+    if (picking){
+      var key = V.targets.map(function(t){ return t.id; }).join(",");
+      if (key !== lastKey){
+        lastKey = key;
+        var box = $("h-pick"); box.innerHTML = ""; box.classList.toggle("one", V.targets.length === 1);
+        V.targets.forEach(function(t){
+          var c = IDENT.color(t.color), b = document.createElement("button");
+          b.style.backgroundColor = c.bg; b.style.color = c.fg;
+          b.innerHTML = '<span class="av">' + IDENT.svg(t.shape, c.fg, IDENT.faceColor(t.color)) + '</span><span class="nm"></span>';
+          b.querySelector(".nm").textContent = t.name || ""; b.setAttribute("aria-label", t.name || (t.color + " " + t.shape));
+          fast(b, function(){ socket.emit("player:pass", t.id); buzz(30); });
+          box.appendChild(b);
+        });
+      }
+    } else lastKey = "";
+  }
+  function fast(el, fn){ el.addEventListener("pointerdown", function(e){ e.preventDefault(); fn(); }); el.addEventListener("keydown", function(e){ if (e.key === "Enter" || e.key === " "){ e.preventDefault(); fn(); } }); }
+  fast($("b-tap"), function(){ socket.emit("player:tap"); buzz(15); });
+  fast($("b-ghost"), function(){ socket.emit("player:ghost"); buzz(10); var b = $("b-ghost"); b.style.transform = "scale(.92)"; setTimeout(function(){ b.style.transform = ""; }, 90); });
+  setInterval(function(){ if (V && V.state === "playing" && Date.now() >= boomUntil - 50 && Date.now() < boomUntil + 400) render(); }, 200);
+})();
+</script>
+</body>
+</html>

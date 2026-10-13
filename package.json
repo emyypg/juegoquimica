@@ -1,0 +1,17 @@
+{
+  "name": "vaso-caliente",
+  "version": "1.0.0",
+  "description": "Juego multijugador tipo papa caliente con un vaso de ácido que explota.",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {
+    "qrcode": "1.5.4",
+    "socket.io": "4.8.1"
+  },
+  "license": "MIT"
+}

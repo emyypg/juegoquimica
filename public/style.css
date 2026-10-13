@@ -1,0 +1,34 @@
+/* Vaso Caliente: estilo compartido. Un solo mundo visual oscuro, de laboratorio de noche: violeta de repollo, rojo ácido y naranja de alarma. */
+@font-face{font-family:"Bricolage Grotesque";font-weight:800;font-style:normal;font-display:swap;src:url(fonts/bricolage-grotesque-latin-800-normal.woff2) format("woff2")}
+@font-face{font-family:"Bricolage Grotesque";font-weight:600;font-style:normal;font-display:swap;src:url(fonts/bricolage-grotesque-latin-600-normal.woff2) format("woff2")}
+@font-face{font-family:"Atkinson Hyperlegible";font-weight:400;font-style:normal;font-display:swap;src:url(fonts/atkinson-hyperlegible-latin-400-normal.woff2) format("woff2")}
+@font-face{font-family:"Atkinson Hyperlegible";font-weight:700;font-style:normal;font-display:swap;src:url(fonts/atkinson-hyperlegible-latin-700-normal.woff2) format("woff2")}
+@font-face{font-family:"Chakra Petch";font-weight:600;font-style:normal;font-display:swap;src:url(fonts/chakra-petch-latin-600-normal.woff2) format("woff2")}
+
+:root{
+  --night:#140e1e; --panel:#1f1630; --panel2:#2a1f40; --line:#3d2f57;
+  --ink:#f4eefb; --muted:#b7aacb;
+  --violet:#9a63e0; --acid:#ff3b5c; --hot:#ff8a1f; --calm:#3fd1b0; --gold:#ffd23f;
+  --f-display:"Bricolage Grotesque","Trebuchet MS",system-ui,sans-serif;
+  --f-body:"Atkinson Hyperlegible","Segoe UI",system-ui,sans-serif;
+  --f-data:"Chakra Petch","Consolas",ui-monospace,monospace;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html,body{height:100%}
+body{margin:0;background:var(--night);color:var(--ink);font-family:var(--f-body);font-size:17px;line-height:1.45}
+h1,h2,h3{font-family:var(--f-display);margin:0;line-height:1.05;text-wrap:balance}
+p{margin:0}
+button{font:inherit;color:inherit;cursor:pointer}
+:focus-visible{outline:3px solid var(--gold);outline-offset:3px}
+.btn{border:0;border-radius:999px;padding:14px 26px;font-weight:700;font-size:1.05rem;background:var(--violet);color:#fff;transition:transform .1s ease,filter .1s ease}
+.btn:hover{filter:brightness(1.1)}
+.btn:active{transform:scale(.97)}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+.btn.hot{background:var(--acid)}
+.btn.ghost{background:transparent;border:2px solid var(--line);color:var(--ink)}
+.tag{font-family:var(--f-data);letter-spacing:.14em;text-transform:uppercase;font-size:.8rem;color:var(--violet)}
+.muted{color:var(--muted)}
+.toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:var(--panel2);border:1px solid var(--line);padding:12px 18px;border-radius:12px;z-index:50;max-width:calc(100% - 32px)}
+@media (prefers-reduced-motion: reduce){*{animation:none!important;transition:none!important}}
