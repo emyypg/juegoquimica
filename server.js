@@ -48,6 +48,7 @@ const server = http.createServer(async (req, res) => {
   let p = url.pathname;
   if (p === "/") p = "/index.html";
   if (p === "/host" || p === "/presentar") p = "/host.html";
+  if (p === "/laboratorio") p = "/laboratorio.html";
   const file = path.normalize(path.join(PUB, p));
   if (!file.startsWith(PUB)) { res.writeHead(403); return res.end(); }
   fs.readFile(file, (err, data) => {
@@ -606,5 +607,6 @@ io.on("connection", (socket) => {
 server.listen(PORT, () => {
   console.log("Vaso Caliente listo en el puerto " + PORT);
   console.log("Pantalla grande: http://localhost:" + PORT + "/host");
+  console.log("Laboratorio virtual: http://localhost:" + PORT + "/laboratorio");
   console.log(ADMIN_PASSWORD ? "Contraseña de admin: activada." : "Aviso: no hay contraseña de admin (ADMIN_PASSWORD o admin-password.txt). Cualquiera puede crear partidas.");
 });

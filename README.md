@@ -56,6 +56,7 @@ y en algún momento explota. El que lo tiene en la mano queda afuera.
 
 - `server.js`: servidor del juego (Node.js + Socket.IO).
 - `public/host.html`: pantalla grande para proyectar.
+- `public/laboratorio.html`: laboratorio virtual del ácido clorhídrico (se abre en **/laboratorio**). Funciona sin internet.
 - `public/index.html`: control del celular de cada jugador.
 - `public/style.css` y `public/fonts/`: estilo y tipografías.
 
