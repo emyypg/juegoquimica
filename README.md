@@ -56,6 +56,8 @@ y en algún momento explota. El que lo tiene en la mano queda afuera.
 
 - `server.js`: servidor del juego (Node.js + Socket.IO).
 - `public/host.html`: pantalla grande para proyectar.
+- `public/presentacion.html`: diapositivas de apoyo para la exposición (se abren en **/presentacion**). Se pasan con las flechas o desde el celular en **/control** (pide el código que aparece en pantalla y la contraseña de admin).
+- `public/control.html`: control remoto de la presentación, con los apuntes de cada diapositiva y un cronómetro.
 - `public/laboratorio.html`: laboratorio virtual del ácido clorhídrico (se abre en **/laboratorio**). Funciona sin internet.
 - `public/index.html`: control del celular de cada jugador.
 - `public/style.css` y `public/fonts/`: estilo y tipografías.

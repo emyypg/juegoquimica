@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
+<meta name="theme-color" content="#140e1e">
+<title>Control de la presentación</title>
+<link rel="stylesheet" href="style.css">
+<style>
+body{height:100dvh;display:flex;flex-direction:column;overflow:hidden;background:radial-gradient(circle at 50% 0%,#2a1f40,#140e1e 70%)}
+.view{flex:1;display:flex;flex-direction:column;padding:calc(16px + env(safe-area-inset-top,0px)) 16px calc(16px + env(safe-area-inset-bottom,0px));gap:12px;min-height:0}
+#v-login{justify-content:center;gap:16px}
+#v-login h1{font-size:2rem}
+label{font-weight:700}
+input{font:inherit;font-size:1.3rem;padding:14px 16px;border-radius:14px;border:2px solid var(--line);background:var(--panel);color:var(--ink);width:100%}
+#f-code{font-family:var(--f-data);letter-spacing:.3em;text-align:center;font-size:2rem}
+.err{color:#ff8fa3;min-height:1.4em}
+.top{display:flex;justify-content:space-between;align-items:center;gap:10px}
+.cnt{font-family:var(--f-data);font-size:1.1rem;color:var(--gold)}
+.timer{font-family:var(--f-data);font-size:1.4rem;background:var(--panel2);border:1px solid var(--line);border-radius:999px;padding:4px 14px}
+.timer.warn{color:var(--hot)} .timer.over{color:var(--acid)}
+#title{font-family:var(--f-display);font-weight:800;font-size:1.5rem;line-height:1.1}
+#notes{flex:1;min-height:0;overflow:auto;background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:14px 16px;font-size:1.12rem;line-height:1.5}
+#nextT{font-size:.95rem;color:var(--muted)}
+#nextT b{color:var(--ink)}
+.btns{display:grid;grid-template-columns:1fr 2.2fr;gap:12px;height:30dvh;min-height:150px}
+.btns button{border:0;border-radius:22px;font-family:var(--f-display);font-weight:800;font-size:1.6rem;color:#fff;touch-action:manipulation}
+#b-prev{background:var(--panel2);border:2px solid var(--line)}
+#b-next{background:linear-gradient(135deg,var(--violet),var(--acid));font-size:2.2rem;box-shadow:0 10px 0 rgba(0,0,0,.3)}
+#b-next:active,#b-prev:active{transform:translateY(4px)}
+.mini{display:flex;gap:8px}
+.mini button{flex:1;background:transparent;border:1px solid var(--line);border-radius:12px;padding:8px;color:var(--muted);font-size:.95rem}
+#off{position:fixed;top:0;left:0;right:0;background:var(--acid);color:#fff;text-align:center;padding:6px;font-weight:700;z-index:9}
+</style>
+</head>
+<body>
+<div id="off" hidden>Sin conexión… reconectando</div>
+
+<section class="view" id="v-login">
+  <span class="tag">Presentación · control remoto</span>
+  <h1>Controlá las diapositivas</h1>
+  <form id="f-login" autocomplete="off" style="display:flex;flex-direction:column;gap:12px">
+    <label for="f-code">Código de la pantalla</label>
+    <input id="f-code" inputmode="numeric" pattern="[0-9]*" maxlength="4" placeholder="0000">
+    <label for="f-pw" id="l-pw">Contraseña de admin</label>
+    <input id="f-pw" type="password" placeholder="Contraseña de admin">
+    <button class="btn hot" type="submit" style="font-size:1.3rem;padding:16px">Conectar</button>
+    <p class="err" id="err" aria-live="polite"></p>
+  </form>
+</section>
+
+<section class="view" id="v-ctl" hidden>
+  <div class="top"><span class="cnt" id="cnt">1 / 1</span><span class="timer" id="timer" title="Tocá para reiniciar">00:00</span></div>
+  <div id="title">—</div>
+  <div id="notes"></div>
+  <div id="nextT"></div>
+  <div class="btns"><button id="b-prev" aria-label="Anterior">◀</button><button id="b-next" aria-label="Siguiente">Siguiente ▶</button></div>
+  <div class="mini"><button id="b-first">⏮ Inicio</button><button id="b-last">Final ⏭</button></div>
+</section>
+
+<script src="/socket.io/socket.io.js"></script>
+<script>
+(function(){
+  "use strict";
+  var $ = function(id){ return document.getElementById(id); };
+  var qs = new URLSearchParams(location.search), socket = io(), joined = null, total = 1, t0 = null;
+  if (qs.get("c")) $("f-code").value = qs.get("c");
+  try { var s = JSON.parse(sessionStorage.getItem("presCtl") || "null"); if (s){ if (!qs.get("c")) $("f-code").value = s.code; $("f-pw").value = s.pw || ""; } } catch(e){}
+
+  function show(id){ ["v-login","v-ctl"].forEach(function(v){ $(v).hidden = v !== id; }); }
+  function join(code, pw, silent){
+    socket.emit("pres:remote", {code: code, password: pw}, function(r){
+      if (!r || !r.ok){ if (!silent){ $("err").textContent = (r && r.error) || "No se pudo conectar."; } show("v-login"); return; }
+      joined = {code: code, pw: pw}; try { sessionStorage.setItem("presCtl", JSON.stringify(joined)); } catch(e){}
+      $("err").textContent = ""; show("v-ctl"); if (r.state) render(r.state);
+      if (!t0) t0 = Date.now();
+    });
+  }
+  $("f-login").addEventListener("submit", function(e){
+    e.preventDefault();
+    var c = $("f-code").value.trim();
+    if (!/^\d{4}$/.test(c)){ $("err").textContent = "El código tiene 4 números."; return; }
+    join(c, $("f-pw").value, false);
+  });
+  socket.on("connect", function(){
+    $("off").hidden = true;
+    socket.emit("host:info", {}, function(r){ var need = !r || r.needPassword; $("f-pw").hidden = !need; $("l-pw").hidden = !need; });
+    if (joined) join(joined.code, joined.pw, true);
+  });
+  socket.on("disconnect", function(){ $("off").hidden = false; });
+  socket.on("pres:state", render);
+  function render(st){
+    if (!st) return; total = st.total || 1;
+    $("cnt").textContent = (st.i+1) + " / " + total;
+    $("title").textContent = st.title || "";
+    $("notes").textContent = st.notes || "";
+    $("nextT").innerHTML = st.nextTitle ? "Sigue: <b></b>" : "Es la última diapositiva.";
+    if (st.nextTitle) $("nextT").querySelector("b").textContent = st.nextTitle;
+    $("notes").scrollTop = 0;
+  }
+  function send(cmd){ socket.emit("pres:go", cmd); if (navigator.vibrate) navigator.vibrate(15); if (!t0) t0 = Date.now(); }
+  $("b-next").addEventListener("click", function(){ send("next"); });
+  $("b-prev").addEventListener("click", function(){ send("prev"); });
+  $("b-first").addEventListener("click", function(){ send(0); });
+  $("b-last").addEventListener("click", function(){ send(total-1); });
+  $("timer").addEventListener("click", function(){ t0 = Date.now(); });
+  setInterval(function(){
+    if (!t0) return;
+    var s = Math.floor((Date.now()-t0)/1000), m = Math.floor(s/60);
+    var el = $("timer"); el.textContent = String(m).padStart(2,"0") + ":" + String(s%60).padStart(2,"0");
+    el.classList.toggle("warn", m >= 13 && m < 15); el.classList.toggle("over", m >= 15);
+  }, 500);
+})();
+</script>
+</body>
+</html>

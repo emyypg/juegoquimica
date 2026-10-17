@@ -49,6 +49,8 @@ const server = http.createServer(async (req, res) => {
   if (p === "/") p = "/index.html";
   if (p === "/host" || p === "/presentar") p = "/host.html";
   if (p === "/laboratorio") p = "/laboratorio.html";
+  if (p === "/presentacion") p = "/presentacion.html";
+  if (p === "/control") p = "/control.html";
   const file = path.normalize(path.join(PUB, p));
   if (!file.startsWith(PUB)) { res.writeHead(403); return res.end(); }
   fs.readFile(file, (err, data) => {
@@ -77,6 +79,7 @@ const GHOST_CUT = FAST ? 10 : 60, GHOST_CAP = FAST ? 200 : 3000;
 const BOT_NAMES = ["Bot Ácido", "Bot Base", "Bot Repollo", "Bot Burbuja", "Bot Probeta", "Bot Pipeta"];
 
 const rooms = new Map();
+const presRooms = new Map(); // presentaciones: código → { hostSid, state }
 const rid = () => Math.random().toString(36).slice(2, 10) + Math.random().toString(36).slice(2, 8);
 const rand = (a, b) => a + Math.random() * (b - a);
 const pick = (arr) => arr[Math.floor(Math.random() * arr.length)];
@@ -435,6 +438,46 @@ function addBots(room, n) {
 
 // ---------- Conexiones ----------
 io.on("connection", (socket) => {
+  // ---------- Presentación con control remoto desde el celular ----------
+  socket.data.presTries = 0;
+  socket.on("pres:host", (_, ack) => {
+    let code;
+    do { code = String(Math.floor(1000 + Math.random() * 9000)); } while (presRooms.has(code));
+    const pr = { code, hostSid: socket.id, state: null, cleanup: null };
+    presRooms.set(code, pr);
+    socket.data.presHost = code; socket.join("pres:" + code);
+    if (typeof ack === "function") ack({ ok: true, code, needPassword: !!ADMIN_PASSWORD });
+  });
+  socket.on("pres:resume", ({ code } = {}, ack) => {
+    const pr = presRooms.get(String(code || ""));
+    if (!pr) return typeof ack === "function" && ack({ ok: false });
+    if (pr.cleanup) { clearTimeout(pr.cleanup); pr.cleanup = null; }
+    pr.hostSid = socket.id; socket.data.presHost = pr.code; socket.join("pres:" + pr.code);
+    if (typeof ack === "function") ack({ ok: true, code: pr.code });
+  });
+  socket.on("pres:state", (st) => {
+    const pr = presRooms.get(socket.data.presHost || ""); if (!pr || pr.hostSid !== socket.id) return;
+    pr.state = st && typeof st === "object" ? st : null;
+    socket.to("pres:" + pr.code).emit("pres:state", pr.state);
+  });
+  socket.on("pres:remote", ({ code, password } = {}, ack) => {
+    const reply = (x) => typeof ack === "function" && ack(x);
+    if (socket.data.presTries >= 10) return reply({ ok: false, error: "Demasiados intentos. Recargá la página." });
+    const pr = presRooms.get(String(code || "").trim());
+    if (!pr) { socket.data.presTries++; return reply({ ok: false, error: "No hay ninguna presentación con ese código." }); }
+    if (ADMIN_PASSWORD && password !== ADMIN_PASSWORD) { socket.data.presTries++; return reply({ ok: false, error: "Contraseña incorrecta." }); }
+    socket.data.presRemote = pr.code; socket.join("pres:" + pr.code);
+    io.to(pr.hostSid).emit("pres:remote-on");
+    reply({ ok: true, state: pr.state });
+  });
+  socket.on("pres:go", (cmd) => {
+    const pr = presRooms.get(socket.data.presRemote || ""); if (!pr) return;
+    if (cmd === "next" || cmd === "prev" || (Number.isInteger(cmd) && cmd >= 0 && cmd < 200)) io.to(pr.hostSid).emit("pres:go", cmd);
+  });
+  socket.on("disconnect", () => {
+    const pr = presRooms.get(socket.data.presHost || "");
+    if (pr && pr.hostSid === socket.id) pr.cleanup = setTimeout(() => presRooms.delete(pr.code), 60 * 60 * 1000);
+  });
   socket.data.pin = null; socket.data.pid = null; socket.data.host = false;
   const room = () => rooms.get(socket.data.pin);
   const isHost = () => { const r = room(); return r && socket.data.host && r.hostSid === socket.id; };
@@ -608,5 +651,6 @@ server.listen(PORT, () => {
   console.log("Vaso Caliente listo en el puerto " + PORT);
   console.log("Pantalla grande: http://localhost:" + PORT + "/host");
   console.log("Laboratorio virtual: http://localhost:" + PORT + "/laboratorio");
+  console.log("Presentación: http://localhost:" + PORT + "/presentacion  (control: /control)");
   console.log(ADMIN_PASSWORD ? "Contraseña de admin: activada." : "Aviso: no hay contraseña de admin (ADMIN_PASSWORD o admin-password.txt). Cualquiera puede crear partidas.");
 });

@@ -1,0 +1,520 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ácido clorhídrico · Presentación</title>
+<style>
+@font-face{font-family:"Bricolage Grotesque";font-weight:800;font-display:swap;src:url(fonts/bricolage-grotesque-latin-800-normal.woff2) format("woff2")}
+@font-face{font-family:"Bricolage Grotesque";font-weight:600;font-display:swap;src:url(fonts/bricolage-grotesque-latin-600-normal.woff2) format("woff2")}
+@font-face{font-family:"Atkinson Hyperlegible";font-weight:400;font-display:swap;src:url(fonts/atkinson-hyperlegible-latin-400-normal.woff2) format("woff2")}
+@font-face{font-family:"Atkinson Hyperlegible";font-weight:700;font-display:swap;src:url(fonts/atkinson-hyperlegible-latin-700-normal.woff2) format("woff2")}
+@font-face{font-family:"Chakra Petch";font-weight:600;font-display:swap;src:url(fonts/chakra-petch-latin-600-normal.woff2) format("woff2")}
+:root{
+  --bg:#140e1e; --panel:#1f1630; --panel2:#2a1f40; --line:#3d2f57; --ink:#f4eefb; --muted:#b7aacb;
+  --violet:#9a63e0; --acid:#ff3b5c; --hot:#ff8a1f; --calm:#3fd1b0; --gold:#ffd23f; --cl:#5fd38f;
+  --fd:"Bricolage Grotesque","Trebuchet MS",sans-serif; --fb:"Atkinson Hyperlegible","Segoe UI",sans-serif; --fm:"Chakra Petch",Consolas,monospace;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html,body{margin:0;height:100%;background:#0b0712;color:var(--ink);font-family:var(--fb);overflow:hidden}
+#viewport{position:fixed;inset:0;display:grid;place-items:center}
+#stage{position:relative;width:1600px;height:900px;transform-origin:center center;overflow:hidden;border-radius:6px;
+  background:radial-gradient(900px 600px at 18% 0%,rgba(154,99,224,.22),transparent 60%),radial-gradient(700px 500px at 100% 100%,rgba(255,59,92,.14),transparent 60%),var(--bg)}
+#stage::before{content:"";position:absolute;inset:0;opacity:.28;pointer-events:none;
+  background-image:linear-gradient(#241c33 1px,transparent 1px),linear-gradient(90deg,#241c33 1px,transparent 1px);background-size:64px 64px;
+  mask-image:linear-gradient(180deg,#000,transparent 75%);-webkit-mask-image:linear-gradient(180deg,#000,transparent 75%)}
+.slide{position:absolute;inset:0;padding:70px 90px 80px;display:flex;flex-direction:column;opacity:0;transform:translateX(40px);transition:opacity .45s ease,transform .45s ease;pointer-events:none}
+.slide.on{opacity:1;transform:none;pointer-events:auto}
+.slide.past{transform:translateX(-40px)}
+.kick{font-family:var(--fm);font-size:22px;letter-spacing:.2em;text-transform:uppercase;color:var(--violet)}
+h1,h2{font-family:var(--fd);margin:0;line-height:1.02;letter-spacing:-.015em}
+h2{font-size:68px;font-weight:800;margin-top:6px}
+h2 em{font-style:normal;color:var(--acid)}
+.body{flex:1;display:flex;align-items:center;justify-content:center;gap:60px;min-height:0}
+.eq{font-family:var(--fm);font-weight:600;font-size:52px;white-space:nowrap}
+.eq sub,.eq sup{font-size:.6em}
+sub,sup{line-height:0}
+.lbl{font-family:var(--fd);font-weight:600;font-size:30px;color:var(--muted);text-align:center}
+.big{font-family:var(--fd);font-weight:800}
+.pill{display:inline-block;border-radius:999px;padding:10px 26px;font-family:var(--fd);font-weight:600;font-size:30px;background:var(--panel2);border:2px solid var(--line)}
+.card{background:rgba(42,31,64,.72);border:2px solid rgba(154,99,224,.3);border-radius:28px;padding:28px 34px}
+.fade-in > *{opacity:0;transform:translateY(18px);transition:opacity .5s ease,transform .5s ease}
+.slide.on .fade-in > *{opacity:1;transform:none}
+.slide.on .fade-in > *:nth-child(2){transition-delay:.15s}.slide.on .fade-in > *:nth-child(3){transition-delay:.3s}.slide.on .fade-in > *:nth-child(4){transition-delay:.45s}.slide.on .fade-in > *:nth-child(5){transition-delay:.6s}.slide.on .fade-in > *:nth-child(6){transition-delay:.75s}.slide.on .fade-in > *:nth-child(7){transition-delay:.9s}
+.arrow{font-family:var(--fm);font-size:52px;color:var(--violet)}
+/* retratos */
+.por{display:flex;flex-direction:column;align-items:center;gap:14px}
+.por .fr{width:260px;height:320px;border-radius:24px;overflow:hidden;border:4px solid rgba(255,210,63,.55);background:var(--panel2);box-shadow:0 20px 50px rgba(0,0,0,.45);display:grid;place-items:center}
+.por .fr img{width:100%;height:100%;object-fit:cover;filter:sepia(.25) contrast(1.05)}
+.por .fr .fb{font-family:var(--fd);font-weight:800;font-size:90px;color:var(--gold)}
+.por b{font-family:var(--fd);font-weight:800;font-size:34px}
+.por span{font-family:var(--fm);font-size:24px;color:var(--gold)}
+.por.sm .fr{width:200px;height:250px}
+.por.sm b{font-size:28px}
+/* tiles de datos */
+.tiles{display:grid;grid-template-columns:repeat(3,1fr);gap:26px;width:100%}
+.tile{background:rgba(42,31,64,.72);border:2px solid rgba(154,99,224,.3);border-radius:26px;padding:26px 28px;display:flex;flex-direction:column;gap:6px}
+.tile .v{font-family:var(--fd);font-weight:800;font-size:64px;line-height:1;color:var(--gold)}
+.tile .v small{font-size:.45em;color:var(--ink)}
+.tile .k{font-family:var(--fd);font-weight:600;font-size:26px;color:var(--muted)}
+/* línea de tiempo */
+.tl{position:relative;width:100%;height:420px}
+.tl .ln{position:absolute;left:0;right:0;top:200px;height:6px;border-radius:3px;background:linear-gradient(90deg,var(--violet),var(--acid),var(--gold))}
+.tl .ev{position:absolute;top:0;width:200px;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;text-align:center;gap:10px}
+.tl .ev .y{font-family:var(--fd);font-weight:800;font-size:36px;color:var(--gold);height:180px;display:flex;align-items:flex-end;padding-bottom:12px}
+.tl .ev .d{width:34px;height:34px;border-radius:50%;background:var(--bg);border:6px solid var(--acid);margin-top:-4px}
+.tl .ev .n{font-family:var(--fd);font-weight:600;font-size:26px;margin-top:16px;line-height:1.15}
+.tl .ev.dn{top:186px}
+.tl .ev.dn .d{margin-top:0}
+.tl .ev.dn .y{height:auto;align-items:flex-start;padding:10px 0 0}
+.tl .ev.dn .n{margin-top:0}
+/* usos */
+.uses{display:grid;grid-template-columns:repeat(3,1fr);gap:26px;width:100%}
+.use{background:rgba(42,31,64,.72);border:2px solid rgba(154,99,224,.3);border-radius:26px;padding:22px;display:flex;flex-direction:column;align-items:center;gap:12px}
+.use svg{width:120px;height:120px}
+.use b{font-family:var(--fd);font-weight:800;font-size:34px}
+.use span{font-family:var(--fm);font-size:22px;color:var(--gold)}
+/* tabla de reacciones */
+.rx{display:grid;grid-template-columns:auto 1fr auto;gap:22px 34px;align-items:center;width:100%}
+.rx .t{font-family:var(--fd);font-weight:800;font-size:36px}
+.rx .eq{font-size:40px;background:rgba(0,0,0,.25);border:2px solid var(--line);border-radius:18px;padding:12px 22px}
+.rx .r{font-family:var(--fd);font-weight:600;font-size:28px;color:var(--gold)}
+/* pie y overlay */
+#bar{position:absolute;left:0;bottom:0;height:8px;background:linear-gradient(90deg,var(--violet),var(--acid));transition:width .4s ease;z-index:5}
+#num{position:absolute;right:34px;bottom:22px;font-family:var(--fm);font-size:22px;color:var(--muted);z-index:5}
+#brand{position:absolute;left:34px;bottom:22px;font-family:var(--fm);font-size:20px;color:#7d7096;letter-spacing:.12em;z-index:5}
+#setup{position:absolute;inset:0;z-index:20;display:grid;place-items:center;background:rgba(11,7,18,.92)}
+#setup .box{display:grid;grid-template-columns:auto 1fr;gap:48px;align-items:center;background:var(--panel);border:2px solid var(--line);border-radius:32px;padding:44px 52px;max-width:1200px}
+#setup img{width:300px;height:300px;background:#fff;border-radius:18px;padding:12px}
+#setup h3{font-family:var(--fd);font-weight:800;font-size:54px;margin:0 0 12px}
+#setup p{font-size:28px;color:var(--muted);margin:8px 0}
+#setup .code{font-family:var(--fm);font-size:72px;color:var(--gold);letter-spacing:.2em}
+#setup .keys{font-size:22px;color:#8f84a8;margin-top:20px}
+#remoteOn{position:absolute;top:22px;right:28px;z-index:6;font-family:var(--fm);font-size:18px;color:var(--calm);opacity:0;transition:opacity .4s}
+#remoteOn.show{opacity:1}
+</style>
+</head>
+<body>
+<div id="viewport"><div id="stage">
+
+<!-- 1 PORTADA -->
+<section class="slide" data-title="Portada" data-notes="Saludá. Presentate: “Soy Emily y les voy a hablar del ácido clorhídrico.” Esperá a que hagan silencio.">
+  <div class="body" style="flex-direction:column;gap:20px">
+    <svg width="440" height="300" viewBox="0 0 440 300" aria-hidden="true">
+      <defs><radialGradient id="gCl" cx="38%" cy="35%" r="70%"><stop offset="0" stop-color="#b8f5cf"/><stop offset=".55" stop-color="#3fbf6f"/><stop offset="1" stop-color="#1d6b3c"/></radialGradient>
+      <radialGradient id="gH" cx="38%" cy="35%" r="70%"><stop offset="0" stop-color="#ffffff"/><stop offset=".6" stop-color="#e7e2f3"/><stop offset="1" stop-color="#9d93b8"/></radialGradient></defs>
+      <circle cx="270" cy="150" r="120" fill="url(#gCl)"/><circle cx="118" cy="150" r="76" fill="url(#gH)"/>
+      <text x="270" y="170" text-anchor="middle" font-family="Bricolage Grotesque" font-weight="800" font-size="64" fill="#0d3a20">Cl</text>
+      <text x="118" y="168" text-anchor="middle" font-family="Bricolage Grotesque" font-weight="800" font-size="52" fill="#3a3150">H</text>
+    </svg>
+    <h1 class="big" style="font-size:120px">Ácido <span style="color:var(--acid)">clorhídrico</span></h1>
+    <div class="eq" style="font-size:64px;color:var(--gold)">HCl<sub>(ac)</sub></div>
+    <div class="lbl" style="margin-top:10px">Emily Puente Gonzalez · 4.° “B”</div>
+  </div>
+</section>
+
+<!-- 2 PREGUNTA -->
+<section class="slide" data-title="La pregunta" data-notes="“¿Qué tienen en común un volcán, una pileta y el estómago de cada uno de ustedes?” Dejá 2 segundos. “El ácido clorhídrico.” Contá de qué vas a hablar: qué es, historia, propiedades, obtención, cuerpo, usos.">
+  <div class="body" style="flex-direction:column;gap:50px">
+    <div class="fade-in" style="display:flex;gap:70px;align-items:flex-end">
+      <div style="display:flex;flex-direction:column;align-items:center;gap:16px">
+        <svg width="260" height="230" viewBox="0 0 260 230"><path d="M20 220 L105 70 Q130 55 155 70 L240 220Z" fill="#5a3b2e"/><path d="M98 82 Q130 60 162 82 L150 96 Q130 86 110 96Z" fill="#ff8a1f"/><path d="M118 92 L104 150 L122 140 L116 190" stroke="#ff8a1f" stroke-width="8" fill="none" stroke-linecap="round"/><g fill="#8a7f9f" opacity=".85"><circle cx="120" cy="40" r="22"/><circle cx="148" cy="28" r="26"/><circle cx="176" cy="44" r="20"/><circle cx="160" cy="10" r="14"/></g></svg>
+        <span class="pill">Volcán</span></div>
+      <div style="display:flex;flex-direction:column;align-items:center;gap:16px">
+        <svg width="260" height="230" viewBox="0 0 260 230"><rect x="20" y="90" width="220" height="120" rx="14" fill="#3a8ab8"/><path d="M20 120 Q47 108 75 120 T130 120 T185 120 T240 120" stroke="#bfe6ff" stroke-width="6" fill="none"/><path d="M20 160 Q47 148 75 160 T130 160 T185 160 T240 160" stroke="#bfe6ff" stroke-width="6" fill="none" opacity=".6"/><path d="M190 90 V40 Q190 24 206 24 H214" stroke="#cfc6e3" stroke-width="8" fill="none" stroke-linecap="round"/><path d="M222 90 V40 Q222 24 238 24 H246" stroke="#cfc6e3" stroke-width="8" fill="none" stroke-linecap="round"/></svg>
+        <span class="pill">Pileta</span></div>
+      <div style="display:flex;flex-direction:column;align-items:center;gap:16px">
+        <svg width="260" height="230" viewBox="0 0 260 230"><path d="M110 20 V60 Q110 80 92 92 Q40 125 52 175 Q66 220 130 214 Q205 206 214 150 Q222 100 176 92 Q146 88 140 60 V20" fill="#e2627c" stroke="#ffb3c2" stroke-width="6"/><path d="M80 150 Q130 175 190 140" stroke="#ffd23f" stroke-width="6" fill="none" stroke-dasharray="10 10"/></svg>
+        <span class="pill">Estómago</span></div>
+    </div>
+    <div class="big" style="font-size:150px;color:var(--gold);line-height:.8">?</div>
+  </div>
+</section>
+
+<!-- 3 QUÉ ES -->
+<section class="slide" data-title="Qué es" data-notes="HCl: un hidrógeno y un cloro. Compuesto binario. Puro es un GAS: cloruro de hidrógeno. Disuelto en agua: ÁCIDO clorhídrico, HCl(ac), ac = acuoso.">
+  <span class="kick">¿Qué es?</span><h2>Un gas que se vuelve <em>ácido</em></h2>
+  <div class="body fade-in">
+    <div class="card" style="text-align:center"><div class="eq">HCl<sub>(g)</sub></div><div class="lbl" style="margin-top:10px">cloruro de hidrógeno</div></div>
+    <div style="display:flex;flex-direction:column;align-items:center;gap:8px"><span class="arrow">→</span>
+      <svg width="90" height="110" viewBox="0 0 90 110"><path d="M45 6 Q80 56 80 74 A35 35 0 0 1 10 74 Q10 56 45 6Z" fill="#3a8ab8"/></svg><span class="lbl" style="font-size:24px">+ agua</span></div>
+    <div class="card" style="text-align:center;border-color:var(--acid)"><div class="eq" style="color:var(--acid)">HCl<sub>(ac)</sub></div><div class="lbl" style="margin-top:10px">ácido clorhídrico</div></div>
+  </div>
+</section>
+
+<!-- 4 HIDRÁCIDOS -->
+<section class="slide" data-title="Hidrácidos y nombre" data-notes="Familia de los HIDRÁCIDOS: ácidos sin oxígeno, hidrógeno + no metal (grupos 16 y 17). Nombre: ácido + raíz + hídrico: ácido clor-hídrico. Otros: fluorhídrico, bromhídrico, yodhídrico, sulfhídrico.">
+  <span class="kick">Clasificación</span><h2>Familia: <em>hidrácidos</em></h2>
+  <div class="body" style="flex-direction:column;gap:46px">
+    <div class="fade-in" style="display:flex;gap:22px">
+      <div class="card eq" style="font-size:44px">HF</div>
+      <div class="card eq" style="font-size:56px;border-color:var(--acid);color:var(--acid);transform:scale(1.08)">HCl</div>
+      <div class="card eq" style="font-size:44px">HBr</div>
+      <div class="card eq" style="font-size:44px">HI</div>
+      <div class="card eq" style="font-size:44px">H<sub>2</sub>S</div>
+    </div>
+    <div style="display:flex;gap:18px;align-items:center;font-family:var(--fd);font-weight:800;font-size:58px">
+      <span class="pill" style="font-size:40px">ácido</span><span class="arrow">+</span><span class="pill" style="font-size:40px;border-color:var(--cl);color:var(--cl)">clor</span><span class="arrow">+</span><span class="pill" style="font-size:40px;border-color:var(--gold);color:var(--gold)">hídrico</span>
+    </div>
+    <div class="lbl" style="font-size:28px">sin oxígeno · H + no metal</div>
+  </div>
+</section>
+
+<!-- 5 MOLÉCULA -->
+<section class="slide" data-title="La molécula: Lewis y electronegatividad" data-notes="Enlace COVALENTE POLAR: comparten electrones, pero el cloro tira más. Lewis: la raya es el par compartido, el cloro tiene 3 pares libres. Electronegatividad (Pauling): H 2,20 y Cl 3,16, diferencia casi 1. Cloro δ− e hidrógeno δ+. Por eso se disuelve tan bien en agua.">
+  <span class="kick">La molécula</span><h2>Enlace covalente <em>polar</em></h2>
+  <div class="body">
+    <svg width="560" height="360" viewBox="0 0 560 360" aria-label="Estructura de Lewis">
+      <text x="90" y="215" font-family="Bricolage Grotesque" font-weight="800" font-size="130" fill="#f4eefb">H</text>
+      <line x1="200" y1="172" x2="300" y2="172" stroke="#f4eefb" stroke-width="12" stroke-linecap="round"/>
+      <text x="320" y="215" font-family="Bricolage Grotesque" font-weight="800" font-size="130" fill="#5fd38f">Cl</text>
+      <g fill="#ffd23f"><circle cx="365" cy="62" r="11"/><circle cx="405" cy="62" r="11"/><circle cx="365" cy="262" r="11"/><circle cx="405" cy="262" r="11"/><circle cx="500" cy="152" r="11"/><circle cx="500" cy="192" r="11"/></g>
+      <text x="100" y="80" font-family="Atkinson Hyperlegible" font-weight="700" font-size="54" fill="#ff8a1f">δ+</text>
+      <text x="460" y="330" font-family="Atkinson Hyperlegible" font-weight="700" font-size="54" fill="#9a63e0">δ−</text>
+    </svg>
+    <div class="card" style="width:520px">
+      <div class="lbl" style="text-align:left;margin-bottom:22px">Electronegatividad</div>
+      <div style="display:flex;align-items:center;gap:18px;margin-bottom:18px"><b class="big" style="font-size:44px;width:70px">H</b><div style="height:40px;width:250px;border-radius:12px;background:#e7e2f3"></div><b class="eq" style="font-size:40px">2,20</b></div>
+      <div style="display:flex;align-items:center;gap:18px"><b class="big" style="font-size:44px;width:70px;color:var(--cl)">Cl</b><div style="height:40px;width:360px;border-radius:12px;background:var(--cl)"></div><b class="eq" style="font-size:40px">3,16</b></div>
+    </div>
+  </div>
+</section>
+
+<!-- 6 LÍNEA DE TIEMPO -->
+<section class="slide" data-title="Historia: línea de tiempo" data-notes="“Tiene más de mil años de historia y fue clave para la química moderna.” Mostrá la línea entera y decí que la vas a recorrer.">
+  <span class="kick">Historia</span><h2>Más de <em>1000 años</em></h2>
+  <div class="body">
+    <div class="tl fade-in">
+      <div class="ln"></div>
+      <div class="ev" style="left:7%"><span class="y">c. 800</span><span class="d"></span><span class="n">Jabir</span></div>
+      <div class="ev dn" style="left:21%"><span class="d"></span><span class="y">s. XV</span><span class="n">Basilio Valentín</span></div>
+      <div class="ev" style="left:35%"><span class="y">s. XVII</span><span class="d"></span><span class="n">Glauber</span></div>
+      <div class="ev dn" style="left:49%"><span class="d"></span><span class="y">1772</span><span class="n">Priestley<br>Scheele</span></div>
+      <div class="ev" style="left:63%"><span class="y">1810</span><span class="d"></span><span class="n">Davy</span></div>
+      <div class="ev dn" style="left:77%"><span class="d"></span><span class="y">1824</span><span class="n">Prout</span></div>
+      <div class="ev" style="left:91%"><span class="y">1863</span><span class="d"></span><span class="n">Ley de Álcalis</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- 7 ALQUIMISTAS -->
+<section class="slide" data-title="Alquimistas y agua regia" data-notes="Se le atribuye a JABIR IBN HAYYAN, alquimista persa, cerca del año 800: mezcló sal común con vitriolo (ácido sulfúrico). Los alquimistas querían hacer oro. Con ácido nítrico forma el AGUA REGIA, la única mezcla que disuelve el oro.">
+  <span class="kick">c. año 800</span><h2>Los <em>alquimistas</em></h2>
+  <div class="body">
+    <div class="por"><div class="fr"><img alt="Jabir ibn Hayyan" data-cands="Jabir_ibn_Hayyan.jpg|Geber.jpg" data-fb="J"></div><b>Jabir ibn Hayyan</b><span>c. 721 – 815</span></div>
+    <div style="display:flex;flex-direction:column;gap:34px">
+      <div class="card" style="display:flex;align-items:center;gap:20px"><span class="pill">sal</span><span class="arrow">+</span><span class="pill">vitriolo</span><span class="arrow">→</span><span class="eq" style="font-size:46px;color:var(--acid)">HCl</span></div>
+      <div class="card" style="display:flex;align-items:center;gap:20px;border-color:var(--gold)">
+        <span class="eq" style="font-size:40px">HCl + HNO<sub>3</sub></span><span class="arrow">=</span><span class="big" style="font-size:40px;color:var(--gold)">agua regia</span>
+        <svg width="90" height="90" viewBox="0 0 90 90"><circle cx="45" cy="45" r="38" fill="#ffd23f" stroke="#b98400" stroke-width="6"/><text x="45" y="60" text-anchor="middle" font-family="Bricolage Grotesque" font-weight="800" font-size="40" fill="#5a3d00">Au</text></svg>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 8 MURIÁTICO Y GLAUBER -->
+<section class="slide" data-title="Ácido muriático y Glauber" data-notes="Siglo XV: BASILIO VALENTÍN lo describe. Lo llamaban “espíritu de sal” o “ácido MURIÁTICO”: muria = salmuera en latín. Siglo XVII: GLAUBER calienta sal con ácido sulfúrico; buscaba sulfato de sodio (medicamento) y el HCl le salía como subproducto.">
+  <span class="kick">Siglos XV – XVII</span><h2>“Espíritu de sal”</h2>
+  <div class="body">
+    <div style="display:flex;flex-direction:column;align-items:center;gap:22px">
+      <div class="card" style="text-align:center"><div class="big" style="font-size:72px;color:var(--gold)">muria</div><div class="arrow" style="font-size:40px">↓</div><div class="big" style="font-size:44px">salmuera</div></div>
+      <span class="pill">ácido muriático</span>
+    </div>
+    <div class="por"><div class="fr"><img alt="Johann Rudolf Glauber" data-cands="Johann_Rudolf_Glauber.jpg|Johann_Rudolph_Glauber.jpg|Glauber.jpg" data-fb="G"></div><b>Johann R. Glauber</b><span>1604 – 1670</span></div>
+    <div class="card"><div class="eq" style="font-size:40px">NaCl + H<sub>2</sub>SO<sub>4</sub></div><div class="arrow" style="text-align:center">↓</div><div class="eq" style="font-size:40px">NaHSO<sub>4</sub> + <span style="color:var(--acid)">HCl</span></div></div>
+  </div>
+</section>
+
+<!-- 9 PRIESTLEY Y SCHEELE -->
+<section class="slide" data-title="1772: Priestley y Scheele" data-notes="1772: el inglés JOSEPH PRIESTLEY obtiene por primera vez el GAS PURO. Como se disolvía en agua, lo recogió sobre MERCURIO. Lo llamó “aire ácido marino”. El sueco SCHEELE también lo estudia y a partir de él descubre el CLORO.">
+  <span class="kick">1772</span><h2>El gas <em>puro</em></h2>
+  <div class="body">
+    <div class="por"><div class="fr"><img alt="Joseph Priestley" data-cands="Priestley.jpg|Joseph_Priestley.jpg" data-fb="P"></div><b>Joseph Priestley</b><span>1733 – 1804</span></div>
+    <div style="display:flex;flex-direction:column;align-items:center;gap:12px">
+      <svg width="320" height="300" viewBox="0 0 320 300" aria-label="Gas recogido sobre mercurio"><path d="M30 190 H290 V250 Q290 270 270 270 H50 Q30 270 30 250Z" fill="#a8b0bd" stroke="#cfc6e3" stroke-width="5"/><path d="M34 210 H286" stroke="#e7ecf2" stroke-width="4" opacity=".6"/><rect x="125" y="30" width="70" height="200" rx="35" fill="rgba(200,230,170,.25)" stroke="#cfc6e3" stroke-width="5"/><rect x="129" y="170" width="62" height="56" fill="#a8b0bd"/><g fill="#e7f6d6" opacity=".9"><circle cx="150" cy="80" r="7"/><circle cx="170" cy="110" r="5"/><circle cx="155" cy="140" r="6"/></g></svg>
+      <span class="pill">mercurio · Hg</span>
+    </div>
+    <div class="por sm"><div class="fr"><img alt="Carl Wilhelm Scheele" data-cands="Carl_Wilhelm_Scheele_from_Familj-Journalen1874.png|Carl_Wilhelm_Scheele.jpg|Scheele.jpg" data-fb="S"></div><b>Carl W. Scheele</b><span>descubre el Cl<sub>2</sub></span></div>
+  </div>
+</section>
+
+<!-- 10 DAVY -->
+<section class="slide" data-title="1810: Davy" data-notes="Lavoisier creía que TODOS los ácidos tenían OXÍGENO. En 1810 HUMPHRY DAVY demuestra que el HCl NO tiene oxígeno: es solo hidrógeno y cloro, y que el cloro es un elemento. Cambia la definición de ácido: lo que lo hace ácido es el HIDRÓGENO.">
+  <span class="kick">1810</span><h2>¿Todos los ácidos tienen <em>oxígeno</em>?</h2>
+  <div class="body">
+    <div class="por"><div class="fr"><img alt="Humphry Davy" data-cands="Sir_Humphry_Davy,_Bt_by_Thomas_Phillips.jpg|Humphry_Davy_Engraving_1830.jpg|Sir_Humphry_Davy,_Bt._by_Thomas_Lawrence.jpg|Humphry_Davy.jpg" data-fb="D"></div><b>Humphry Davy</b><span>1778 – 1829</span></div>
+    <div class="fade-in" style="display:flex;flex-direction:column;gap:30px;align-items:center">
+      <div style="position:relative"><span class="big" style="font-size:150px;color:#e45d5d">O</span><svg style="position:absolute;inset:0" width="100%" height="100%" viewBox="0 0 100 100" preserveAspectRatio="none"><line x1="8" y1="12" x2="92" y2="88" stroke="#ff3b5c" stroke-width="9"/></svg></div>
+      <div style="display:flex;gap:20px;align-items:center"><span class="big" style="font-size:90px">H</span><span class="arrow">+</span><span class="big" style="font-size:90px;color:var(--cl)">Cl</span></div>
+      <span class="pill" style="border-color:var(--gold);color:var(--gold)">ácido = hidrógeno</span>
+    </div>
+  </div>
+</section>
+
+<!-- 11 LEY DE ÁLCALIS -->
+<section class="slide" data-title="1863: Revolución Industrial y Ley de Álcalis" data-notes="Siglo XIX: las fábricas de soda (método Leblanc) largaban toneladas de gas HCl al aire: destruía cultivos y dañaba a la gente. 1863: Inglaterra aprueba la LEY DE ÁLCALIS, una de las primeras LEYES AMBIENTALES del mundo: obliga a disolver el gas en agua. Así empieza la producción a gran escala.">
+  <span class="kick">1863 · Inglaterra</span><h2>Ley de <em>Álcalis</em></h2>
+  <div class="body">
+    <svg width="520" height="380" viewBox="0 0 520 380" aria-hidden="true"><rect x="40" y="200" width="300" height="160" fill="#3d2f57"/><path d="M40 200 L110 150 V200 L180 150 V200 L250 150 V200 L320 150 V200" fill="#4b3a6b"/><rect x="360" y="90" width="50" height="270" fill="#5a4680"/><rect x="430" y="140" width="40" height="220" fill="#5a4680"/><g fill="#c9e46a" opacity=".55"><circle cx="385" cy="60" r="34"/><circle cx="420" cy="34" r="28"/><circle cx="460" cy="58" r="30"/><circle cx="450" cy="110" r="22"/><circle cx="490" cy="90" r="20"/></g><g fill="#ffd23f"><rect x="80" y="250" width="40" height="40"/><rect x="160" y="250" width="40" height="40"/><rect x="240" y="250" width="40" height="40"/></g><rect x="0" y="360" width="520" height="20" fill="#2b2340"/></svg>
+    <div class="fade-in" style="display:flex;flex-direction:column;gap:26px;align-items:center">
+      <div class="card" style="display:flex;align-items:center;gap:18px"><span class="eq" style="font-size:44px">HCl<sub>(g)</sub></span><span class="arrow">→</span><span class="big" style="font-size:40px">aire</span><span class="big" style="font-size:54px;color:#ff3b5c">✗</span></div>
+      <div class="card" style="display:flex;align-items:center;gap:18px;border-color:var(--calm)"><span class="eq" style="font-size:44px">HCl<sub>(g)</sub></span><span class="arrow">→</span><span class="big" style="font-size:40px">agua</span><span class="big" style="font-size:54px;color:var(--calm)">✓</span></div>
+      <span class="pill">primera ley ambiental</span>
+    </div>
+  </div>
+</section>
+
+<!-- 12 ESTÓMAGO HISTORIA -->
+<section class="slide" data-title="1824: el ácido del estómago" data-notes="1824: el médico inglés WILLIAM PROUT descubre que el ácido del jugo gástrico es ácido clorhídrico. Después WILLIAM BEAUMONT estudió la digestión en ALEXIS ST. MARTIN, que tenía un agujero en el estómago por un disparo, y pudo ver cómo el jugo gástrico digería la comida.">
+  <span class="kick">1824</span><h2>El ácido del <em>estómago</em></h2>
+  <div class="body">
+    <div class="por"><div class="fr"><img alt="William Prout" data-cands="William_Prout.jpg|William_Prout_(1785-1850).jpg|Prout.jpg" data-fb="P"></div><b>William Prout</b><span>1785 – 1850</span></div>
+    <svg width="330" height="330" viewBox="0 0 260 260" aria-hidden="true"><path d="M110 20 V60 Q110 80 92 92 Q40 125 52 175 Q66 220 130 214 Q205 206 214 150 Q222 100 176 92 Q146 88 140 60 V20" fill="#e2627c" stroke="#ffb3c2" stroke-width="6"/><path d="M60 170 Q130 200 205 150 L205 160 Q140 214 66 182Z" fill="#ffd23f" opacity=".8"/><text x="132" y="150" text-anchor="middle" font-family="Chakra Petch" font-weight="600" font-size="38" fill="#fff">HCl</text></svg>
+    <div class="por sm"><div class="fr"><img alt="William Beaumont" data-cands="William_Beaumont.jpg|William_Beaumont_(1785-1853).jpg|Beaumont.jpg" data-fb="B"></div><b>William Beaumont</b><span>Alexis St. Martin</span></div>
+  </div>
+</section>
+
+<!-- 13 PROPIEDADES FÍSICAS -->
+<section class="slide" data-title="Propiedades físicas" data-notes="Gas INCOLORO, olor picante y sofocante. Masa molar 36,46 g/mol. Se funde a −114 °C, hierve a −85 °C: por eso es gas. Más denso que el aire. MUY soluble: 720 g por litro de agua a 20 °C (por eso humea con el aire húmedo). Máximo ~38 %; industrial 30–34 %; hogar ~10 %.">
+  <span class="kick">Propiedades físicas</span><h2>Los <em>números</em> del HCl</h2>
+  <div class="body">
+    <div class="tiles fade-in">
+      <div class="tile"><span class="v">36,46 <small>g/mol</small></span><span class="k">masa molar</span></div>
+      <div class="tile"><span class="v">−114 <small>°C</small></span><span class="k">punto de fusión</span></div>
+      <div class="tile"><span class="v">−85 <small>°C</small></span><span class="k">punto de ebullición</span></div>
+      <div class="tile"><span class="v">720 <small>g/L</small></span><span class="k">solubilidad en agua (20 °C)</span></div>
+      <div class="tile"><span class="v">38 <small>%</small></span><span class="k">concentración máxima</span></div>
+      <div class="tile"><span class="v" style="font-size:52px">gas incoloro</span><span class="k">olor picante · más denso que el aire</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- 14 ÁCIDO FUERTE -->
+<section class="slide" data-title="Ácido fuerte: disociación, Arrhenius y Brønsted-Lowry" data-notes="ÁCIDO FUERTE: en agua se disocia POR COMPLETO. Ecuación: HCl + H2O → H3O+ + Cl−. Ion hidronio e ion cloruro. Conduce la electricidad. ARRHENIUS: un ácido libera H+ en agua. BRØNSTED-LOWRY: un ácido DONA un protón; el HCl se lo da al agua. Vinagre = ácido débil (suelta pocos).">
+  <span class="kick">Propiedades químicas</span><h2>Ácido <em>fuerte</em></h2>
+  <div class="body" style="flex-direction:column;gap:50px">
+    <div class="card eq" style="font-size:60px">HCl + H<sub>2</sub>O <span style="color:var(--violet)">→</span> <span style="color:var(--acid)">H<sub>3</sub>O<sup>+</sup></span> + <span style="color:var(--cl)">Cl<sup>−</sup></span></div>
+    <div class="fade-in" style="display:flex;gap:40px">
+      <div class="card" style="text-align:center;width:500px"><div class="big" style="font-size:40px">Arrhenius</div><div class="eq" style="font-size:40px;margin-top:12px;color:var(--gold)">libera H<sup>+</sup></div></div>
+      <div class="card" style="text-align:center;width:500px"><div class="big" style="font-size:40px">Brønsted – Lowry</div><div class="eq" style="font-size:40px;margin-top:12px;color:var(--gold)">dona H<sup>+</sup></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- 15 pH -->
+<section class="slide" data-title="El pH: un ejemplo con números" data-notes="pH de 0 a 14: menos de 7 ácido, 7 neutro, más de 7 básico. Ejemplo: HCl 0,1 molar. Como es fuerte, [H+] = 0,1. pH = −log 0,1 = 1. Más ácido que el estómago (1,5 a 3,5).">
+  <span class="kick">El pH</span><h2>pH = −log [H<sup style="font-size:.5em">+</sup>]</h2>
+  <div class="body" style="flex-direction:column;gap:56px">
+    <div style="width:100%">
+      <div style="display:flex;height:56px;border-radius:28px;overflow:hidden"><i style="flex:1;background:#d0234b"></i><i style="flex:1;background:#e0427a"></i><i style="flex:1;background:#c94a9a"></i><i style="flex:1;background:#a24fb0"></i><i style="flex:1;background:#7f56b5"></i><i style="flex:1;background:#6a5fc0"></i><i style="flex:1;background:#4a72c8"></i><i style="flex:1;background:#3a8ab8"></i><i style="flex:1;background:#3aa38c"></i><i style="flex:1;background:#5fb25a"></i><i style="flex:1;background:#9cc23d"></i><i style="flex:1;background:#e2c829"></i></div>
+      <div style="display:flex;justify-content:space-between;font-family:var(--fm);font-size:30px;color:var(--muted);margin-top:10px"><span>0</span><span>7</span><span>14</span></div>
+      <div style="position:relative;height:70px"><span style="position:absolute;left:7.1%;transform:translateX(-50%);font-family:var(--fd);font-weight:800;font-size:34px;color:var(--gold)">▲ 1</span><span style="position:absolute;left:17.8%;transform:translateX(-50%);font-family:var(--fd);font-weight:600;font-size:28px;color:#ffb3c2">▲ estómago</span></div>
+    </div>
+    <div class="card eq" style="font-size:56px">[HCl] = 0,1 M <span style="color:var(--violet)">→</span> pH = −log 0,1 = <span style="color:var(--gold)">1</span></div>
+  </div>
+</section>
+
+<!-- 16 OBTENCIÓN Y NATURALEZA -->
+<section class="slide" data-title="Cómo se obtiene y la naturaleza" data-notes="Tres formas: 1) SÍNTESIS DIRECTA: quemar hidrógeno en cloro, mucho calor. 2) Método de la SAL (Glauber): sal + ácido sulfúrico. 3) SUBPRODUCTO: la mayor parte sale de fábricas de compuestos con cloro, como el PVC. ~20 MILLONES de toneladas por año. Naturaleza: los VOLCANES largan HCl entre sus gases.">
+  <span class="kick">Obtención</span><h2>¿De dónde <em>sale</em>?</h2>
+  <div class="body">
+    <div class="fade-in" style="display:flex;flex-direction:column;gap:24px">
+      <div class="card eq" style="font-size:44px">H<sub>2</sub> + Cl<sub>2</sub> → 2 HCl <span style="font-size:.7em">🔥</span></div>
+      <div class="card eq" style="font-size:44px">NaCl + H<sub>2</sub>SO<sub>4</sub> → NaHSO<sub>4</sub> + HCl</div>
+      <div class="card" style="display:flex;align-items:center;gap:22px"><span class="pill">subproducto</span><span class="big" style="font-size:44px">PVC</span></div>
+      <div class="tile" style="padding:18px 26px"><span class="v">20 <small>millones de t / año</small></span></div>
+    </div>
+    <div style="display:flex;flex-direction:column;align-items:center;gap:14px">
+      <svg width="360" height="320" viewBox="0 0 260 230"><path d="M20 220 L105 70 Q130 55 155 70 L240 220Z" fill="#5a3b2e"/><path d="M98 82 Q130 60 162 82 L150 96 Q130 86 110 96Z" fill="#ff8a1f"/><path d="M118 92 L104 150 L122 140 L116 190" stroke="#ff8a1f" stroke-width="8" fill="none" stroke-linecap="round"/><g fill="#8a7f9f" opacity=".85"><circle cx="120" cy="40" r="22"/><circle cx="148" cy="28" r="26"/><circle cx="176" cy="44" r="20"/></g><text x="150" y="34" text-anchor="middle" font-family="Chakra Petch" font-weight="600" font-size="22" fill="#fff">HCl</text></svg>
+      <span class="pill">volcanes</span>
+    </div>
+  </div>
+</section>
+
+<!-- 17 CUERPO -->
+<section class="slide" data-title="En nuestro cuerpo" data-notes="CÉLULAS PARIETALES del estómago con la BOMBA DE PROTONES: sacan H+ y Cl− y forman HCl. ~2 LITROS de jugo gástrico por día, pH 1,5 a 3,5. Funciones: activa la PEPSINA (digiere proteínas), mata microbios, ayuda a absorber hierro. Protección: MOCO con BICARBONATO; células se renuevan. Reflujo → ANTIÁCIDOS (carbonato de calcio, hidróxido de magnesio) y OMEPRAZOL (frena la bomba).">
+  <span class="kick">En nuestro cuerpo</span><h2>El jugo <em>gástrico</em></h2>
+  <div class="body">
+    <svg width="420" height="420" viewBox="0 0 260 260" aria-hidden="true"><path d="M110 20 V60 Q110 80 92 92 Q40 125 52 175 Q66 220 130 214 Q205 206 214 150 Q222 100 176 92 Q146 88 140 60 V20" fill="#e2627c" stroke="#ffb3c2" stroke-width="8"/><path d="M100 104 Q60 130 66 172 Q80 204 130 200 Q190 194 198 150 Q204 116 172 108" fill="none" stroke="#fff3b0" stroke-width="7" stroke-dasharray="3 9" stroke-linecap="round"/><text x="132" y="160" text-anchor="middle" font-family="Chakra Petch" font-weight="600" font-size="22" fill="#fff">pH 1,5–3,5</text></svg>
+    <div class="fade-in" style="display:grid;grid-template-columns:1fr 1fr;gap:22px;width:760px">
+      <div class="tile"><span class="v">2 <small>L / día</small></span><span class="k">jugo gástrico</span></div>
+      <div class="tile"><span class="v" style="font-size:46px">H<sup>+</sup> + Cl<sup>−</sup></span><span class="k">células parietales</span></div>
+      <div class="tile"><span class="v" style="font-size:46px">pepsina</span><span class="k">digiere proteínas</span></div>
+      <div class="tile"><span class="v" style="font-size:46px">microbios ✗</span><span class="k">defensa</span></div>
+      <div class="tile"><span class="v" style="font-size:46px">moco</span><span class="k">+ bicarbonato</span></div>
+      <div class="tile"><span class="v" style="font-size:46px">antiácidos</span><span class="k">omeprazol</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- 18 USOS -->
+<section class="slide" data-title="Usos cotidianos e industriales" data-notes="LIMPIEZA: ácido muriático (sarro, cemento, cal). DECAPADO: saca el óxido al acero antes de pintar o galvanizar. PLÁSTICOS: PVC (caños, cables) y poliuretanos (colchones). AGUA: pH de piletas y potabilizadoras. ALIMENTOS: gelatina, jarabe de maíz, aditivo E507. PETRÓLEO: disuelve roca caliza en los pozos.">
+  <span class="kick">Usos</span><h2>Está en <em>todos lados</em></h2>
+  <div class="body">
+    <div class="uses fade-in">
+      <div class="use"><svg viewBox="0 0 120 120"><path d="M30 45 H90 L84 105 H36Z" fill="#9a63e0"/><path d="M38 45 Q60 15 82 45" fill="none" stroke="#cfc6e3" stroke-width="6"/><path d="M48 65 H72" stroke="#ffd23f" stroke-width="6"/></svg><b>Limpieza</b><span>muriático</span></div>
+      <div class="use"><svg viewBox="0 0 120 120"><path d="M20 30 H100 V44 H68 V76 H100 V90 H20 V76 H52 V44 H20Z" fill="#a8b0bd"/><circle cx="34" cy="36" r="5" fill="#9a4a22"/><circle cx="88" cy="84" r="6" fill="#9a4a22"/></svg><b>Acero</b><span>decapado</span></div>
+      <div class="use"><svg viewBox="0 0 120 120"><rect x="14" y="48" width="92" height="26" rx="6" fill="#e7e2f3"/><rect x="6" y="44" width="16" height="34" rx="4" fill="#cfc6e3"/><rect x="98" y="44" width="16" height="34" rx="4" fill="#cfc6e3"/></svg><b>Plásticos</b><span>PVC</span></div>
+      <div class="use"><svg viewBox="0 0 120 120"><path d="M60 12 Q96 60 96 78 A36 36 0 0 1 24 78 Q24 60 60 12Z" fill="#3a8ab8"/><path d="M44 80 Q46 96 60 98" stroke="#bfe6ff" stroke-width="6" fill="none" stroke-linecap="round"/></svg><b>Agua</b><span>piletas</span></div>
+      <div class="use"><svg viewBox="0 0 120 120"><path d="M28 52 H92 Q92 100 60 100 Q28 100 28 52Z" fill="#ff8a1f"/><path d="M28 52 H92" stroke="#ffd23f" stroke-width="6"/><circle cx="50" cy="70" r="5" fill="#ffd23f"/><circle cx="68" cy="80" r="4" fill="#ffd23f"/></svg><b>Alimentos</b><span>E507</span></div>
+      <div class="use"><svg viewBox="0 0 120 120"><path d="M60 14 L84 104 H72 L60 56 L48 104 H36Z" fill="#5a4680"/><path d="M44 74 H76 M40 90 H80" stroke="#5a4680" stroke-width="6"/><rect x="20" y="104" width="80" height="8" fill="#2b2340"/><path d="M60 14 L96 30" stroke="#a8b0bd" stroke-width="6"/></svg><b>Petróleo</b><span>pozos</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- 19 REACCIONES -->
+<section class="slide" data-title="Reacciones características" data-notes="Cuatro patrones. Con una BASE: sal + agua (neutralización). Con un METAL: sal + hidrógeno. Con un CARBONATO: sal + agua + CO2 (lo que hace el antiácido en el estómago). Con un ÓXIDO metálico: sal + agua (así se limpia el acero).">
+  <span class="kick">Reacciones</span><h2>Cuatro <em>patrones</em></h2>
+  <div class="body">
+    <div class="rx fade-in" style="display:grid">
+      <span class="t">Base</span><span class="eq">HCl + NaOH → NaCl + H<sub>2</sub>O</span><span class="r">neutralización</span>
+      <span class="t">Metal</span><span class="eq">Zn + 2HCl → ZnCl<sub>2</sub> + H<sub>2</sub>↑</span><span class="r">hidrógeno</span>
+      <span class="t">Carbonato</span><span class="eq">CaCO<sub>3</sub> + 2HCl → CaCl<sub>2</sub> + H<sub>2</sub>O + CO<sub>2</sub>↑</span><span class="r">antiácido</span>
+      <span class="t">Óxido</span><span class="eq">Fe<sub>2</sub>O<sub>3</sub> + 6HCl → 2FeCl<sub>3</sub> + 3H<sub>2</sub>O</span><span class="r">decapado</span>
+    </div>
+  </div>
+</section>
+
+<!-- 20 SEGURIDAD -->
+<section class="slide" data-title="Peligros y seguridad" data-notes="Vapores: irritan nariz, garganta y pulmones (tos, ardor). En piel y ojos: QUEMADURAS QUÍMICAS. Pictograma de CORROSIVO. Guantes y anteojos, lugar ventilado. Siempre el ÁCIDO SOBRE EL AGUA. NUNCA con LAVANDINA: libera cloro gaseoso tóxico. Si salpica: mucha agua varios minutos.">
+  <span class="kick">Seguridad</span><h2>Peligros y <em>cuidados</em></h2>
+  <div class="body">
+    <svg width="340" height="340" viewBox="0 0 200 200" aria-label="Pictograma de corrosivo">
+      <rect x="35" y="35" width="130" height="130" rx="6" transform="rotate(45 100 100)" fill="#fff" stroke="#e01b2f" stroke-width="11"/>
+      <g fill="#111">
+        <rect x="58" y="56" width="11" height="34" rx="3" transform="rotate(-35 63 73)"/>
+        <rect x="124" y="56" width="11" height="34" rx="3" transform="rotate(35 130 73)"/>
+        <circle cx="76" cy="98" r="3.5"/><circle cx="72" cy="108" r="3"/><circle cx="118" cy="98" r="3.5"/><circle cx="122" cy="108" r="3"/>
+        <path d="M54 122 h40 v12 h-40z"/><path d="M54 122 l6 -6 l6 6 l6 -6 l6 6 l6 -6 l6 6" stroke="#fff" stroke-width="2.5" fill="none"/>
+        <path d="M104 134 q2 -14 14 -16 l22 -2 q8 0 6 6 l-6 10 q-2 4 -8 4 h-26z"/>
+        <path d="M110 120 l3 -5 l3 5 l3 -5 l3 5" stroke="#fff" stroke-width="2.5" fill="none"/>
+        <rect x="56" y="140" width="88" height="5" rx="2"/>
+      </g>
+    </svg>
+    <div class="fade-in" style="display:flex;flex-direction:column;gap:22px">
+      <div class="card" style="display:flex;align-items:center;gap:20px"><span class="big" style="font-size:40px">🧤 🥽</span><span class="big" style="font-size:36px">guantes y anteojos</span></div>
+      <div class="card" style="display:flex;align-items:center;gap:18px;border-color:var(--calm)"><span class="big" style="font-size:36px">ácido</span><span class="arrow">→</span><span class="big" style="font-size:36px">agua</span><span class="big" style="font-size:50px;color:var(--calm)">✓</span></div>
+      <div class="card" style="display:flex;align-items:center;gap:18px;border-color:var(--acid)"><span class="eq" style="font-size:40px">HCl</span><span class="arrow">+</span><span class="big" style="font-size:36px">lavandina</span><span class="arrow">→</span><span class="eq" style="font-size:40px">Cl<sub>2</sub></span><span class="big" style="font-size:50px;color:var(--acid)">☠</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- 21 CIERRE -->
+<section class="slide" data-title="Cierre" data-notes="“¿Se acuerdan de la pregunta? Volcán, pileta y estómago: los tres tienen ácido clorhídrico.” Resumen: hidrácido, H + Cl, covalente polar, ácido fuerte. Alquimistas → Davy 1810 → millones de toneladas hoy. Y nos permite digerir. “Muchas gracias. ¿Preguntas?”">
+  <div class="body" style="flex-direction:column;gap:40px">
+    <div style="display:flex;gap:30px;align-items:center;font-family:var(--fd);font-weight:800;font-size:56px">
+      <span class="pill" style="font-size:40px">volcán</span><span class="arrow">·</span><span class="pill" style="font-size:40px">pileta</span><span class="arrow">·</span><span class="pill" style="font-size:40px">estómago</span><span class="arrow">=</span><span class="eq" style="font-size:72px;color:var(--acid)">HCl</span>
+    </div>
+    <h1 class="big" style="font-size:140px">¡Gracias!</h1>
+    <div class="lbl" style="font-size:40px;color:var(--gold)">¿Preguntas?</div>
+  </div>
+</section>
+
+<div id="bar"></div><div id="num"></div><div id="brand">ÁCIDO CLORHÍDRICO · 4.° B</div><div id="remoteOn">● CONTROL CONECTADO</div>
+
+<div id="setup" hidden>
+  <div class="box">
+    <img id="qr" alt="Código QR para controlar desde el celular">
+    <div>
+      <h3>Controlá desde tu celular</h3>
+      <p>Escaneá el código o entrá a <b id="ctlurl"></b></p>
+      <p>Código:</p><div class="code" id="code">····</div>
+      <p class="keys">Teclado: ← → para pasar · F pantalla completa · C muestra este código · Enter para empezar sin celular</p>
+    </div>
+  </div>
+</div>
+
+</div></div>
+
+<script src="/socket.io/socket.io.js"></script>
+<script>
+(function(){
+  "use strict";
+  var $ = function(id){ return document.getElementById(id); };
+  var stage = $("stage"), slides = [].slice.call(document.querySelectorAll(".slide")), cur = 0;
+
+  // Escala 1600×900 a la ventana
+  function fit(){ var s = Math.min(window.innerWidth/1600, window.innerHeight/900); stage.style.transform = "scale(" + s + ")"; }
+  window.addEventListener("resize", fit); fit();
+
+  // Fotos de Wikimedia Commons con dibujo de respaldo
+  document.querySelectorAll("img[data-cands]").forEach(function(img){
+    var c = img.getAttribute("data-cands").split("|"), i = 0;
+    function next(){
+      if (i >= c.length){ var d = document.createElement("span"); d.className = "fb"; d.textContent = img.getAttribute("data-fb") || "?"; img.replaceWith(d); return; }
+      img.src = "https://commons.wikimedia.org/wiki/Special:FilePath/" + encodeURIComponent(c[i++]) + "?width=400";
+    }
+    img.addEventListener("error", next); next();
+  });
+
+  function info(i){ var s = slides[i]; return s ? {title: s.getAttribute("data-title") || "", notes: s.getAttribute("data-notes") || ""} : null; }
+  function go(i){
+    i = Math.max(0, Math.min(slides.length-1, i)); cur = i;
+    slides.forEach(function(s, k){ s.classList.toggle("on", k === i); s.classList.toggle("past", k < i); });
+    $("bar").style.width = ((i+1)/slides.length*100) + "%";
+    $("num").textContent = (i+1) + " / " + slides.length;
+    try { history.replaceState(null, "", "#" + (i+1)); } catch(e){}
+    sendState();
+  }
+  var start = parseInt((location.hash || "").slice(1), 10);
+  go(isFinite(start) && start > 0 ? start-1 : 0);
+
+  function toggleFull(){
+    if (document.fullscreenElement) document.exitFullscreen();
+    else if (document.documentElement.requestFullscreen) document.documentElement.requestFullscreen().catch(function(){});
+  }
+  document.addEventListener("keydown", function(e){
+    if (e.ctrlKey || e.metaKey || e.altKey) return;
+    var k = e.key;
+    if (k === "ArrowRight" || k === "PageDown" || k === " " || k === "ArrowDown"){ e.preventDefault(); $("setup").hidden = true; go(cur+1); }
+    else if (k === "ArrowLeft" || k === "PageUp" || k === "ArrowUp"){ e.preventDefault(); go(cur-1); }
+    else if (k === "Home") go(0);
+    else if (k === "End") go(slides.length-1);
+    else if (k === "f" || k === "F") toggleFull();
+    else if (k === "c" || k === "C"){ if (code) $("setup").hidden = !$("setup").hidden; }
+    else if (k === "Enter" || k === "Escape") $("setup").hidden = true;
+  });
+  stage.addEventListener("click", function(e){ if (!$("setup").hidden) return; if (e.clientX < window.innerWidth*0.25) go(cur-1); else go(cur+1); });
+
+  // Control remoto
+  var socket = null, code = null;
+  function sendState(){
+    if (!socket || !code) return;
+    var a = info(cur), b = info(cur+1);
+    socket.emit("pres:state", {i: cur, total: slides.length, title: a.title, notes: a.notes, nextTitle: b ? b.title : null, titles: slides.map(function(s){ return s.getAttribute("data-title"); })});
+  }
+  if (window.io){
+    socket = io();
+    var saved = null; try { saved = sessionStorage.getItem("presCode"); } catch(e){}
+    function host(){
+      socket.emit("pres:host", {}, function(r){
+        if (!r || !r.ok) return;
+        code = r.code; try { sessionStorage.setItem("presCode", code); } catch(e){}
+        showCode(); $("setup").hidden = false; sendState();
+      });
+    }
+    function showCode(){
+      var url = location.origin + "/control?c=" + code;
+      $("code").textContent = code; $("ctlurl").textContent = location.host + "/control";
+      $("qr").src = "/qr.svg?t=" + encodeURIComponent(url);
+    }
+    socket.on("connect", function(){
+      if (code || saved){
+        socket.emit("pres:resume", {code: code || saved}, function(r){ if (r && r.ok){ code = r.code; showCode(); sendState(); } else { code = null; host(); } });
+      } else host();
+    });
+    socket.on("pres:go", function(cmd){
+      $("setup").hidden = true;
+      if (cmd === "next") go(cur+1); else if (cmd === "prev") go(cur-1); else if (typeof cmd === "number") go(cmd);
+    });
+    socket.on("pres:remote-on", function(){
+      $("setup").hidden = true; sendState();
+      var r = $("remoteOn"); r.classList.add("show"); setTimeout(function(){ r.classList.remove("show"); }, 4000);
+    });
+  }
+})();
+</script>
+</body>
+</html>
