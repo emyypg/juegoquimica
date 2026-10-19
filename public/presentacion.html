@@ -19,8 +19,8 @@
 *{box-sizing:border-box}
 [hidden]{display:none!important}
 html,body{margin:0;height:100%;background:#0b0712;color:var(--ink);font-family:var(--fb);overflow:hidden}
-#viewport{position:fixed;inset:0;display:grid;place-items:center}
-#stage{position:relative;width:1600px;height:900px;transform-origin:center center;overflow:hidden;border-radius:6px;
+#viewport{position:fixed;inset:0;overflow:hidden;background:#0b0712}
+#stage{position:absolute;left:50%;top:50%;width:1600px;height:900px;transform-origin:center center;overflow:hidden;border-radius:6px;
   background:radial-gradient(900px 600px at 18% 0%,rgba(154,99,224,.22),transparent 60%),radial-gradient(700px 500px at 100% 100%,rgba(255,59,92,.14),transparent 60%),var(--bg)}
 #stage::before{content:"";position:absolute;inset:0;opacity:.28;pointer-events:none;
   background-image:linear-gradient(#241c33 1px,transparent 1px),linear-gradient(90deg,#241c33 1px,transparent 1px);background-size:64px 64px;
@@ -452,7 +452,8 @@ sub,sup{line-height:0}
       <h3>Controlá desde tu celular</h3>
       <p>Escaneá el código o entrá a <b id="ctlurl"></b></p>
       <p>Código:</p><div class="code" id="code">····</div>
-      <p class="keys">Teclado: ← → para pasar · F pantalla completa · C muestra este código · Enter para empezar sin celular</p>
+      <button id="b-fs" style="margin-top:18px;font:inherit;font-family:var(--fd);font-weight:800;font-size:30px;color:#fff;background:linear-gradient(135deg,var(--violet),var(--acid));border:0;border-radius:999px;padding:14px 34px;cursor:pointer">Pantalla completa</button>
+      <p class="keys">Teclado: ← → para pasar · F pantalla completa · C muestra este código · Enter para empezar sin celular · el primer clic pone pantalla completa</p>
     </div>
   </div>
 </div>
@@ -467,8 +468,8 @@ sub,sup{line-height:0}
   var stage = $("stage"), slides = [].slice.call(document.querySelectorAll(".slide")), cur = 0;
 
   // Escala 1600×900 a la ventana
-  function fit(){ var s = Math.min(window.innerWidth/1600, window.innerHeight/900); stage.style.transform = "scale(" + s + ")"; }
-  window.addEventListener("resize", fit); fit();
+  function fit(){ var s = Math.min(window.innerWidth/1600, window.innerHeight/900); stage.style.transform = "translate(-50%,-50%) scale(" + s + ")"; }
+  window.addEventListener("resize", fit); document.addEventListener("fullscreenchange", function(){ setTimeout(fit, 50); }); fit();
 
   // Fotos de Wikimedia Commons con dibujo de respaldo
   document.querySelectorAll("img[data-cands]").forEach(function(img){
@@ -496,8 +497,13 @@ sub,sup{line-height:0}
     if (document.fullscreenElement) document.exitFullscreen();
     else if (document.documentElement.requestFullscreen) document.documentElement.requestFullscreen().catch(function(){});
   }
+  var autoFs = false;
+  function enterFs(){ if (!document.fullscreenElement && document.documentElement.requestFullscreen) document.documentElement.requestFullscreen().catch(function(){}); }
+  document.getElementById("b-fs").addEventListener("click", function(e){ e.stopPropagation(); enterFs(); });
+  document.addEventListener("pointerdown", function(){ if (!autoFs){ autoFs = true; enterFs(); } }, true);
   document.addEventListener("keydown", function(e){
     if (e.ctrlKey || e.metaKey || e.altKey) return;
+    if (!autoFs && e.key !== "f" && e.key !== "F" && e.key !== "Escape"){ autoFs = true; enterFs(); }
     var k = e.key;
     if (k === "ArrowRight" || k === "PageDown" || k === " " || k === "ArrowDown"){ e.preventDefault(); $("setup").hidden = true; go(cur+1); }
     else if (k === "ArrowLeft" || k === "PageUp" || k === "ArrowUp"){ e.preventDefault(); go(cur-1); }
