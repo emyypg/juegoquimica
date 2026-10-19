@@ -321,15 +321,25 @@ sub,sup{line-height:0}
 </section>
 
 <!-- 15 pH -->
-<section class="slide" data-title="El pH: un ejemplo con números" data-notes="pH de 0 a 14: menos de 7 ácido, 7 neutro, más de 7 básico. Ejemplo: HCl 0,1 molar. Como es fuerte, [H+] = 0,1. pH = −log 0,1 = 1. Más ácido que el estómago (1,5 a 3,5).">
-  <span class="kick">El pH</span><h2>pH = −log [H<sup style="font-size:.5em">+</sup>]</h2>
-  <div class="body" style="flex-direction:column;gap:56px">
+<section class="slide" data-title="El pH" data-notes="pH: escala del 0 al 14. 7 = neutro (agua pura). Menos de 7 = ácido (cuanto más bajo, más ácido). Más de 7 = básico. Cuantos más iones H+, más bajo el pH. HCl concentrado cerca de 0; estómago 1,5 a 3,5; limón 2; agua 7; lavandina ~12.">
+  <span class="kick">La acidez</span><h2>La escala de <em>pH</em></h2>
+  <div class="body" style="flex-direction:column;gap:30px">
     <div style="width:100%">
-      <div style="display:flex;height:56px;border-radius:28px;overflow:hidden"><i style="flex:1;background:#d0234b"></i><i style="flex:1;background:#e0427a"></i><i style="flex:1;background:#c94a9a"></i><i style="flex:1;background:#a24fb0"></i><i style="flex:1;background:#7f56b5"></i><i style="flex:1;background:#6a5fc0"></i><i style="flex:1;background:#4a72c8"></i><i style="flex:1;background:#3a8ab8"></i><i style="flex:1;background:#3aa38c"></i><i style="flex:1;background:#5fb25a"></i><i style="flex:1;background:#9cc23d"></i><i style="flex:1;background:#e2c829"></i></div>
-      <div style="display:flex;justify-content:space-between;font-family:var(--fm);font-size:30px;color:var(--muted);margin-top:10px"><span>0</span><span>7</span><span>14</span></div>
-      <div style="position:relative;height:70px"><span style="position:absolute;left:7.1%;transform:translateX(-50%);font-family:var(--fd);font-weight:800;font-size:34px;color:var(--gold)">▲ 1</span><span style="position:absolute;left:17.8%;transform:translateX(-50%);font-family:var(--fd);font-weight:600;font-size:28px;color:#ffb3c2">▲ estómago</span></div>
+      <div style="position:relative;height:90px">
+        <span style="position:absolute;left:1%;transform:translateX(-50%);text-align:center;font-family:var(--fd);font-weight:600;font-size:24px;line-height:1.1;bottom:6px">HCl<br>▼</span>
+        <span style="position:absolute;left:17.8%;transform:translateX(-50%);text-align:center;font-family:var(--fd);font-weight:600;font-size:24px;line-height:1.1;bottom:6px;color:#ffb3c2">estómago<br>▼</span>
+        <span style="position:absolute;left:50%;transform:translateX(-50%);text-align:center;font-family:var(--fd);font-weight:600;font-size:24px;line-height:1.1;bottom:6px">agua<br>▼</span>
+        <span style="position:absolute;left:87%;transform:translateX(-50%);text-align:center;font-family:var(--fd);font-weight:600;font-size:24px;line-height:1.1;bottom:6px">lavandina<br>▼</span>
+      </div>
+      <div style="display:flex;height:64px;border-radius:32px;overflow:hidden"><i style="flex:1;background:#d0234b"></i><i style="flex:1;background:#e0427a"></i><i style="flex:1;background:#c94a9a"></i><i style="flex:1;background:#a24fb0"></i><i style="flex:1;background:#7f56b5"></i><i style="flex:1;background:#6a5fc0"></i><i style="flex:1;background:#4a72c8"></i><i style="flex:1;background:#3a8ab8"></i><i style="flex:1;background:#3aa38c"></i><i style="flex:1;background:#5fb25a"></i><i style="flex:1;background:#9cc23d"></i><i style="flex:1;background:#e2c829"></i></div>
+      <div style="display:flex;justify-content:space-between;font-family:var(--fm);font-size:34px;color:var(--muted);margin-top:10px"><span>0</span><span>7</span><span>14</span></div>
     </div>
-    <div class="card eq" style="font-size:56px">[HCl] = 0,1 M <span style="color:var(--violet)">→</span> pH = −log 0,1 = <span style="color:var(--gold)">1</span></div>
+    <div class="fade-in" style="display:flex;gap:30px">
+      <div class="card" style="text-align:center;width:360px;border-color:#d0234b"><div class="big" style="font-size:46px;color:#ff5c7a">ácido</div><div class="eq" style="font-size:36px;margin-top:8px">menos de 7</div></div>
+      <div class="card" style="text-align:center;width:360px;border-color:#6a5fc0"><div class="big" style="font-size:46px;color:#b3a6ff">neutro</div><div class="eq" style="font-size:36px;margin-top:8px">7</div></div>
+      <div class="card" style="text-align:center;width:360px;border-color:#9cc23d"><div class="big" style="font-size:46px;color:#c9e46a">básico</div><div class="eq" style="font-size:36px;margin-top:8px">más de 7</div></div>
+    </div>
+    <div class="pill" style="font-size:32px">más H<sup>+</sup> → pH más bajo</div>
   </div>
 </section>
 
